@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		10448A501E5368F000E28457 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 10448A4F1E5368F000E28457 /* main.cpp */; };
+		108D74F01E5E32A200B355BA /* test#01.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 108D74EE1E5E32A200B355BA /* test#01.cpp */; };
+		10F250C01E5E358C003C1EB7 /* gtest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10F250BF1E5E358C003C1EB7 /* gtest.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,10 @@
 /* Begin PBXFileReference section */
 		10448A4C1E5368F000E28457 /* heatdistribution-DIPC */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "heatdistribution-DIPC"; sourceTree = BUILT_PRODUCTS_DIR; };
 		10448A4F1E5368F000E28457 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		108D74EE1E5E32A200B355BA /* test#01.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test#01.cpp"; sourceTree = "<group>"; };
+		108D74EF1E5E32A200B355BA /* test#01.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = "test#01.hpp"; sourceTree = "<group>"; };
+		10F250BF1E5E358C003C1EB7 /* gtest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtest.framework; path = "heatdistribution-DIPC/gtest.framework"; sourceTree = "<group>"; };
+		10F250C11E5E365C003C1EB7 /* stack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stack.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10F250C01E5E358C003C1EB7 /* gtest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +50,7 @@
 			children = (
 				10448A4E1E5368F000E28457 /* heatdistribution-DIPC */,
 				10448A4D1E5368F000E28457 /* Products */,
+				10F250BF1E5E358C003C1EB7 /* gtest.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,9 +65,20 @@
 		10448A4E1E5368F000E28457 /* heatdistribution-DIPC */ = {
 			isa = PBXGroup;
 			children = (
+				108D74ED1E5E325500B355BA /* testing */,
 				10448A4F1E5368F000E28457 /* main.cpp */,
 			);
 			path = "heatdistribution-DIPC";
+			sourceTree = "<group>";
+		};
+		108D74ED1E5E325500B355BA /* testing */ = {
+			isa = PBXGroup;
+			children = (
+				108D74EE1E5E32A200B355BA /* test#01.cpp */,
+				108D74EF1E5E32A200B355BA /* test#01.hpp */,
+				10F250C11E5E365C003C1EB7 /* stack.h */,
+			);
+			name = testing;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,6 +136,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				108D74F01E5E32A200B355BA /* test#01.cpp in Sources */,
 				10448A501E5368F000E28457 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -208,13 +228,26 @@
 		10448A541E5368F000E28457 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/heatdistribution-DIPC",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		10448A551E5368F000E28457 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/heatdistribution-DIPC",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -238,6 +271,7 @@
 				10448A551E5368F000E28457 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

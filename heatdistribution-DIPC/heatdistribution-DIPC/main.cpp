@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include<math.h>
+
 using namespace std;
 
 int main() {
@@ -70,7 +71,6 @@ int main() {
                 else {
                     //Why does (1/4) give a different output instead of 0.25 in C++?
                     //Test this
-                    
                     int result = ((xyGrid[r-1][c])+
                                   (xyGrid[r][c+1])+
                                   (xyGrid[r+1][c])+
@@ -91,6 +91,8 @@ int main() {
     }
     
     
+
+    
     for(int r = 0; r < rowInputY; r++){
         for(int c = 0; c <columnInputX; c++){
             cout<< "    [" << xyGrid[r][c] << "]";
@@ -100,5 +102,6 @@ int main() {
     
     return 0;
 }
+
 
 
