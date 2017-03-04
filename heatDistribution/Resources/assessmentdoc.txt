@@ -1,0 +1,52 @@
+. [30 marks] The introduction above tells you how to calculate the steady state
+temperature at every point on the plate. Discuss at least two possible methods
+that you could use to distribute this processing over multiple processors [15
+marks], your choice of method [3 marks], and the reasons for your choice [12
+marks].
+
+SPMD Algorithm Strategy:
+
+Worksharing:
+
+
+//——————————————————————
+[70 marks] Write a program to implement your chosen method to solve the
+given heat diffusion problem in a distributed manner.
+
+i You must fully and explicitly document a detailed description of the
+implementation of the method you have chosen, including how the
+system was tested. [45 marks]
+
+//———————
+Introduction:
+YARCC submission
+Program’s implementation
+
+//———————
+Scalability metrics: Variance of input measurement on one, and four processors.
+How much faster can we solve the problem with 4 processors instead of one?
+How much more work can be done with 4 processors instead of 1?
+Impact of communication
+Tolerance Range
+Grid Size
+Number of threads
+
+//———————
+Calculation Process on one, and four processors:
+Calculation of time
+
+//———————
+Output on one, and four processors:
+Standard deviation 
+
+Concluding thoughts:
+
+ii For an implementation using a fixed problem size (size of plate) and
+fixed tolerance (specified by the user), calculate the temperature distribution
+calculated by (a) a single processor, and (b) four processors.
+For both solutions show the calculated temperature distribution as an
+image. Comparing the two solutions, calculate the standard deviation of
+differences in calculated temperature at each point in the two solutions.
+[25 marks]
+
+//TODO: Add references at the bottom from DIPC bookmark in Chrome.

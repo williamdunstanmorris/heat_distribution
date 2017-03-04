@@ -22,7 +22,7 @@
         <entry file="file://$PROJECT_DIR$/heatDistribution/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="442">
-              <caret line="144" column="26" lean-forward="true" selection-start-line="144" selection-start-column="26" selection-end-line="144" selection-end-column="26" />
+              <caret line="144" column="26" lean-forward="false" selection-start-line="144" selection-start-column="26" selection-end-line="144" selection-end-column="26" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <marker date="1488588052000" expanded="true" signature="1504:1554" ph="..." />
@@ -198,12 +198,12 @@
       <workItem from="1488362463068" duration="26848000" />
       <workItem from="1488454719646" duration="5401000" />
       <workItem from="1488478627619" duration="11705000" />
-      <workItem from="1488580787438" duration="6080000" />
+      <workItem from="1488580787438" duration="6164000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55958000" />
+    <option name="totallyTimeSpent" value="56042000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -502,7 +502,7 @@
     <entry file="file://$PROJECT_DIR$/heatDistribution/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="442">
-          <caret line="144" column="26" lean-forward="true" selection-start-line="144" selection-start-column="26" selection-end-line="144" selection-end-column="26" />
+          <caret line="144" column="26" lean-forward="false" selection-start-line="144" selection-start-column="26" selection-end-line="144" selection-end-column="26" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
             <marker date="1488588052000" expanded="true" signature="1504:1554" ph="..." />
