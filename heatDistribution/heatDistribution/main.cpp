@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <vector>
 #include <time.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -27,8 +28,9 @@ std::vector<std::vector<int>> b;
 double difference, addedValues, curTemp;
 double accumDifference, storedDiff = 0;
 double diff = 1;
-double threshold = 0.001;
+double threshold = 0.00001;
 double dynamicRange;
+int ic = -1;
 
 //------------------------------------------
 /*
@@ -98,7 +100,7 @@ void hDOnePro(int row, int column, std::vector< std::vector<double> >& vec){
   int hdOnePro_TICKS_AND_SECONDS_start = clock();
 
   do {
-    //        ic++;
+    ic++;
     //        cout<< "//--------------\nIteration [" << ic << "]\n" << endl;
 
     for(int r = 0; r < row; r++){
@@ -130,14 +132,14 @@ void hDOnePro(int row, int column, std::vector< std::vector<double> >& vec){
             //Accumulative difference
             accumDifference+=difference;
             //  std::cout<<"@totalAllDifference = " << accumDifference << "\n\n"<< endl;
-
           }
         }
         cout<<"[" << setw(8)<< vec[r][c] << "]";
-
       } // End Column
+      // usleep(10000);
       cout << endl;
     } // End Row
+
 
     //Store last difference calculation into a temporary variable
     storedDiff = diff;
@@ -149,7 +151,7 @@ void hDOnePro(int row, int column, std::vector< std::vector<double> >& vec){
   } while(dynamicRange >= threshold);
 
   int hdOnePro_TICKS_AND_SECONDS_end = clock();
-  std::cout << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
+  std::cout << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
 
 //TODO: Shall I pass the reference vec here, or the global xyGrid?
 
@@ -189,16 +191,16 @@ void calculateRGB(int row, int column, std::vector< std::vector<double> >& xyGri
 void writePPM(int row, int column){
 
   //TODO: Make a file that does appends and does not overwrite, and iterate over the file number
-  ofstream img("tryout.txt");
+  ofstream img("tryout.ppm");
   img << "P3" << endl;
-  img << 800 << " " << 800 << endl;
-  img << "255" << endl;
+  img << 50 << " " << 50 << endl;
+  img << "255" << endl; //maximum value of picture
 
   for (int j = 0; j < row; j++)
   {
     for (int i = 0; i < column; i++){
       //            cout<< "    [" << xyGrid[j][i] << "]";
-      img<< "["<< setw(4)<<((int)r[j][i])<< "," << ((int)g[j][i]) << "," <<((int)b[j][i]) << "]";
+      img <<" " << ((int)r[j][i])<< " " << ((int)g[j][i]) << " " <<((int)b[j][i]) << " ";
     }
     //        std::cout << endl;
     img << endl;
@@ -226,8 +228,8 @@ int main(int argc, const char * argv[]) {
   * pass by value will make a copy of the argument into the function parameter. In many cases,
   * this is a needless performance hit, as the original argument would have sufficed.
   */
-  int row = 10;
-  int column = 10;
+  int row = 1000;
+  int column = 1000;
 
   std::vector<std::vector<double> > v;
   generate(row, column, v);
