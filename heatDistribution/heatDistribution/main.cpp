@@ -1,190 +1,274 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
+#include <iomanip>
+#include <vector>
+#include <time.h>
+
 using namespace std;
 
 /*
- * Declarations:
- */
+* Declarations:
+*/
 //------------------------------------------
-const int columnInputX = 3;
-const int rowInputY = 3;
-int i;
+// const int columnInputX(3), rowInputY(3);
+// double xyGrid[columnInputX][rowInputY];
 
-double xyGrid[columnInputX][rowInputY]; //Declare an empty 2D array with size determined by use^I
+int row; int column;
+std::vector<std::vector<int>> r;
+std::vector<std::vector<int>> g;
+std::vector<std::vector<int>> b;
 
-double difference, addedValues, curTemp, sum;
+//Declare an empty 2D array with size determined by use^I
+//Make 3 global vectors r,g,b.
+//Make them point to the size of row and column
+//Also declare row and colum here but as empty. Must be defined in main method.
+
+double difference, addedValues, curTemp;
 double accumDifference, storedDiff = 0;
 double diff = 1;
-double threshold = 0.01;
+double threshold = 0.001;
 double dynamicRange;
 
-double r[columnInputX][rowInputY] ;
-double g[columnInputX][rowInputY] ;
-double b[columnInputX][rowInputY] ;
-
 //------------------------------------------
 /*
- *Function Declarations:
- */
+*Function Declarations:
+*/
+//TODO: What is an easier/ less performance consumptive way of declaring row and column here? N.B: they iterate over.
+//I want to just declare it and then point to its size when iterating over it in methods...
 int main(int argc, const char * argv[]);
-void init(const int row, const int column);
-void hDOnePro(const int row, const int column);
+void generate(int rows, int columns, std::vector< std::vector<double> >& vec);
+void init(int rows, int columns);
+
+void fill(int rows, int columns, std::vector< std::vector<double> >& vec);
+void hDOnePro(int row, int column, std::vector< std::vector<double> >& vec);
 void hDFourPro();
-void writePPM(ofstream img);
-void calculateRGB(const int row, const int column);
+void writePPM(int row, int column);
+void calculateRGB(int row, int column, std::vector< std::vector<double> >& xyGrid);
+void print(double **p, int &rowSize, int &colSize);
 
 
 //------------------------------------------
 /*
- *Setup:
- */
-void init(const int row, const int column){
+*Setup:
+*/
+void generate(int rows, int columns, std::vector< std::vector<double> >& vec)
+{
+  vec.resize(rows, std::vector<double>(1 << columns, 0));
+  r.resize(rows, std::vector<int>(1<<columns,0));
+  g.resize(rows, std::vector<int>(1<<columns,0));
+  b.resize(rows, std::vector<int>(1<<columns,0));
+  fill(rows, columns, vec);
+
+}
+
+
+//TODO: Point instead *rows? Is this better for performance here?
+void fill(int rows, int columns, std::vector< std::vector<double> >& vec){
+
+  //Define the array's size and elements:
+  for(int r = 0; r < rows; r++){
+    for(int c = 0; c <columns; c++){
+      //Fill all boundary indices with temperature values.
+      if (r == 0) {
+        vec[r][c]=0;
+      }
+      else if(c == 0 || c == columns-1 ) {
+        vec[r][c]=100;
+      }
+      else if(r == rows-1 ){
+        vec[r][c]=100;
+      }//end boundary fill
+      else {
+        //fill all inner nodes with 0s.
+        vec[r][c]=0;
+      }
+      cout<<"[" << setw(8)<< vec[r][c] << "]";
+    }//end for[column]
+    cout << endl;
+  }//end for[row]
+}
+
+//------------------------------------------
+/*
+* Serial Program:
+*/
+void hDOnePro(int row, int column, std::vector< std::vector<double> >& vec){
+
+  int hdOnePro_TICKS_AND_SECONDS_start = clock();
+
+  do {
+    //        ic++;
+    //        cout<< "//--------------\nIteration [" << ic << "]\n" << endl;
+
     for(int r = 0; r < row; r++){
-        for(int c = 0; c <column; c++){
-            //Fill all boundary indices with temperature values.
-            if (r == 0) {
-                xyGrid[r][c]=0;
-            }
-            else if(c == 0 || c == column-1 ) {
-                xyGrid[r][c]=100;
-            }
-            else if(r == row-1 ){
-                xyGrid[r][c]=100;
-            }//end boundary fill
-            else {
-                //fill all inner nodes with 0s.
-                xyGrid[r][c]=0;
-            }
-            cout<< "    [" << xyGrid[r][c] << "]";
-        }//end for[column]
-        cout << "" <<endl;
-    }//end for[row]
-}
+      for(int c = 0; c <column; c++){
 
-//------------------------------------------
-/*
- * Serial Program:
- */
-void hDOnePro(const int row, const int column){
+        //Reference the temperature for comparison later:
+        curTemp = vec[r][c];
 
-    //TODO: redo iteration variable names.
-    do {
-//        ic++;
-//        cout<< "//--------------\nIteration [" << ic << "]\n" << endl;
-        for(int r = 0; r < row; r++){
-            for(int c = 0; c <column; c++){
+        //Calculate values inside boundary:
+        if((r != 0) && (r != row-1)) {
+          if((c != 0) && (c != column-1)){
+            //                        std::cout <<"Index Point: [" << r << "][" << c << "] @W (temperature) = " << vec[r][c] << endl;
+            //Equation split up into a 'divide and conquer' algorithm
+            addedValues = ((vec[r-1][c])+
+            (vec[r][c+1])+
+            (vec[r+1][c])+
+            (vec[r][c-1])); //Steady state heat equation.
+            //                        std::cout << "@addedValues = " << "(" << vec[r-1][c]<< "+" << vec[r][c+1]<< "+" << vec[r+1][c]<< "+" << vec[r][c-1]<< ") ="<< addedValues  <<endl;
+            //@test(1) for corrent added values;
 
-                //Reference the temperature for comparison later:
-                curTemp = xyGrid[r][c];
+            //Successive estimate calculation: i.e the @new curTemp - current curTemp;
+            //  std::cout << "@sum = "<< addedValues<< endl;
 
-                //Calculate values inside boundary:
-                if((r != 0) && (r != rowInputY-1)) {
-                    if((c != 0) && (c != columnInputX-1)){
-//                        std::cout <<"Index Point: [" << r << "][" << c << "] @W (temperature) = " << xyGrid[r][c] << endl;
-                        //Equation split up into a 'divide and conquer' algorithm
-                        addedValues = ((xyGrid[r-1][c])+
-                                (xyGrid[r][c+1])+
-                                (xyGrid[r+1][c])+
-                                (xyGrid[r][c-1])); //Steady state heat equation.
-//                        std::cout << "@addedValues = " << "(" << xyGrid[r-1][c]<< "+" << xyGrid[r][c+1]<< "+" << xyGrid[r+1][c]<< "+" << xyGrid[r][c-1]<< ") ="<< addedValues  <<endl;
-                        //@test(1) for corrent added values;
+            vec[r][c] = (0.25)*addedValues;
 
-                        //Successive estimate calculation: i.e the @new curTemp - current curTemp;
-//                        std::cout << "@sum = "<< sum<< endl;
+            difference = vec[r][c] - curTemp;
+            //  std::cout<<"@difference = " << vec[r][c] << " - " << curTemp << " = " << difference << endl;
 
-                        sum = (0.25)*addedValues;
+            //Accumulative difference
+            accumDifference+=difference;
+            //  std::cout<<"@totalAllDifference = " << accumDifference << "\n\n"<< endl;
 
-                        xyGrid[r][c] = sum;
-
-                        difference = xyGrid[r][c] - curTemp;
-//                        std::cout<<"@difference = " << xyGrid[r][c] << " - " << curTemp << " = " << difference << endl;
-
-                        //Accumulative difference
-                        accumDifference+=difference;
-//                        std::cout<<"@totalAllDifference = " << accumDifference << "\n\n"<< endl;
-
-                    }
-                }
-            } // End Column
-        } // End Row
-
-        //Store last difference calculation into a temporary variable
-        storedDiff = diff;
-
-        //Calculation of difference
-        diff = accumDifference/(columnInputX*rowInputY);
-//        std::cout<<"@stopCondition = " << diff<< "\n\n"<<endl;
-        dynamicRange = diff - storedDiff;
-        std::cout<<"@differencePoint = "<< dynamicRange << endl;
-
-    } while(dynamicRange >= threshold);
-
-    calculateRGB(row, column);
-
-}
-
-void calculateRGB(const int row, const int column){
-    for (int j = 0; j < row; j++) {
-        for (int i = 0; i < column; i++) {
-            double f = xyGrid[j][i]/100; //Get value between 0:1
-
-            double a=(1-f)/0.25;	//invert and group
-            int X=(int)floor(a);	//this is the integer part
-            int Y=(int)floor(255*(a-X)); //fractional part from 0 to 255
-
-            switch(X) {
-                case 0:
-                    r[j][i]=255;g[j][i]=Y;b[j][i]=0;
-                    break;
-                case 1:
-                    r[j][i]=255-Y;g[j][i]=255;b[j][i]=0;
-                    break;
-                case 2:
-                    r[j][i]=0;g[j][i]=255;b[j][i]=Y;
-                    break;
-                case 3:
-                    r[j][i]=0;g[j][i]=255-Y;b[j][i]=255;
-                    break;
-                case 4:
-                    r[j][i]=0;g[j][i]=0;b[j][i]=255;
-                    break;
-            }
+          }
         }
-    }
+        cout<<"[" << setw(8)<< vec[r][c] << "]";
+
+      } // End Column
+      cout << endl;
+    } // End Row
+
+    //Store last difference calculation into a temporary variable
+    storedDiff = diff;
+    // Calculation of difference
+    diff = accumDifference/(row*column);
+    dynamicRange = diff - storedDiff;
+    cout << "\n-------------------------------------------------\n"<<endl;
+
+  } while(dynamicRange >= threshold);
+
+  int hdOnePro_TICKS_AND_SECONDS_end = clock();
+  std::cout << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
+
+//TODO: Shall I pass the reference vec here, or the global xyGrid?
+
 }
 
-void writePPM(){
+void calculateRGB(int row, int column, std::vector< std::vector<double> >& xyGrid){
 
-    //TODO: Make a file that does appends and does not overwrite, and iterate over the file number
-    ofstream img("tryout.ppm");
-    img << "P3" << endl;
-    img << columnInputX << " " << rowInputY << endl;
-    img << "255" << endl;
+  for (int j = 0; j < row; j++) {
+    for (int i = 0; i < column; i++) {
+      double f = xyGrid[j][i]/100; //Get value between 0:1
 
-    for (int j = 0; j < rowInputY; j++)
-    {
-        for (int i = 0; i < columnInputX; i++){
-//            cout<< "    [" << xyGrid[j][i] << "]";
-            img << ((int)r[j][i]) << " " << ((int)g[j][i]) << " " << ((int)b[j][i]) << " ";
-        }
-//        std::cout << endl;
-        img << endl;
+      double a=(1-f)/0.25;	//invert and group
+      int X=(int)floor(a);	//this is the integer part
+      int Y=(int)floor(255*(a-X)); //fractional part from 0 to 255
+
+      switch(X) {
+        case 0:
+        r[j][i]=255;g[j][i]=Y;b[j][i]=0;
+        break;
+        case 1:
+        r[j][i]=255-Y;g[j][i]=255;b[j][i]=0;
+        break;
+        case 2:
+        r[j][i]=0;g[j][i]=255;b[j][i]=Y;
+        break;
+        case 3:
+        r[j][i]=0;g[j][i]=255-Y;b[j][i]=255;
+        break;
+        case 4:
+        r[j][i]=0;g[j][i]=0;b[j][i]=255;
+        break;
+      }
     }
-    img.close();
-    system("open picture.ppm");
+  }
+}
+
+void writePPM(int row, int column){
+
+  //TODO: Make a file that does appends and does not overwrite, and iterate over the file number
+  ofstream img("tryout.txt");
+  img << "P3" << endl;
+  img << 800 << " " << 800 << endl;
+  img << "255" << endl;
+
+  for (int j = 0; j < row; j++)
+  {
+    for (int i = 0; i < column; i++){
+      //            cout<< "    [" << xyGrid[j][i] << "]";
+      img<< "["<< setw(4)<<((int)r[j][i])<< "," << ((int)g[j][i]) << "," <<((int)b[j][i]) << "]";
+    }
+    //        std::cout << endl;
+    img << endl;
+  }
+  img.close();
+}
+
+void print(double **p, int rowSize, int &colSize){
+  //Iterate over size of array instead.
+
+  for(int row = 0; row < rowSize; row++){
+    for(int col = 0; col < colSize; col++){
+      std::cout << std::setw(5) << p[row][col];
+    }
+    std::cout << std::endl;
+  }
 }
 
 int main(int argc, const char * argv[]) {
 
-    //TODO: Decide how to determine a variable tolerence
-    //TODO: Make the col and row ints small and run it on this computer.
-    int r = 10; int c = 10;
-    init(r,c);
-    hDOnePro(r,c);
-    ofstream img("tryout.ppm");
-    writePPM();
+  //TODO: Decide how to determine a variable tolerence
+  //TODO: Make the col and row ints small and run it on this computer.
 
-    return 0;
+  /*
+  * pass by value will make a copy of the argument into the function parameter. In many cases,
+  * this is a needless performance hit, as the original argument would have sufficed.
+  */
+  int row = 10;
+  int column = 10;
+
+  std::vector<std::vector<double> > v;
+  generate(row, column, v);
+  hDOnePro(row, column, v);
+  calculateRGB(row, column, v);
+  writePPM(row, column);
+
+
+
+
+
+
+
+
+  //    Static/Dynamic Array?
+  //
+  //            The C++ array classes are better behaved than the low-level C array because they know a lot about themselves, and can answer questions C arrays can't. They are able to clean after themselves. And more importantly, they are usually written using templates and/or inlining, which means that what appears to a lot of code in debug resolves to little or no code produced in release build, meaning no difference with their built-in less safe competition.
+  //
+  //    All in all, it falls on two categories:
+  //
+  //    Dynamic arrays
+  //
+  //    Using a pointer to a malloc-ed/new-ed array will be at best as fast as the std::vector version, and a lot less safe (see litb's post).
+  //
+  //    So use a std::vector.
+  //
+  //            Static arrays
+  //
+  //    Using a static array will be at best:
+  //
+  //    as fast as the std::array version
+  //            and a lot less safe.
+
+  //Why?
+
+
+
+  //    //// free dynamically allocated memory
+  //    for( int i = 0 ; i < *row ; i++ )
+  //    {
+  //        delete [] matrix[i] ;
+  //    }
+  //    delete [] matrix ;
 }
-
