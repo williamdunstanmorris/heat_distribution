@@ -43,7 +43,7 @@ void generate(int rows, int columns, std::vector< std::vector<double> >& vec);
 void init(int rows, int columns);
 
 void fill(int rows, int columns, std::vector< std::vector<double> >& vec);
-void hDOnePro(int row, int column, std::vector< std::vector<double> >& vec);
+void hDOnePro(int row, int column, std::vector< std::vector<double> > vec);
 void hDFourPro();
 void writePPM(int row, int column);
 void calculateRGB(int row, int column, std::vector< std::vector<double> >& xyGrid);
@@ -56,10 +56,10 @@ void print(double **p, int &rowSize, int &colSize);
 */
 void generate(int rows, int columns, std::vector< std::vector<double> >& vec)
 {
-  vec.resize(rows, std::vector<double>(1 << columns, 0));
-  r.resize(rows, std::vector<int>(1<<columns,0));
-  g.resize(rows, std::vector<int>(1<<columns,0));
-  b.resize(rows, std::vector<int>(1<<columns,0));
+  vec.resize(rows, std::vector<double>(columns, 0));
+  r.resize(rows, std::vector<int>(columns,0));
+  g.resize(rows, std::vector<int>(columns,0));
+  b.resize(rows, std::vector<int>(columns,0));
   fill(rows, columns, vec);
 
 }
@@ -95,9 +95,9 @@ void fill(int rows, int columns, std::vector< std::vector<double> >& vec){
 /*
 * Serial Program:
 */
-void hDOnePro(int row, int column, std::vector< std::vector<double> >& vec){
+void hDOnePro(int row, int column, std::vector< std::vector<double> > vec){
 
-  int hdOnePro_TICKS_AND_SECONDS_start = clock();
+//  int hdOnePro_TICKS_AND_SECONDS_start = clock();
 
   do {
     ic++;
@@ -150,8 +150,8 @@ void hDOnePro(int row, int column, std::vector< std::vector<double> >& vec){
 
   } while(dynamicRange >= threshold);
 
-  int hdOnePro_TICKS_AND_SECONDS_end = clock();
-  std::cout << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
+//  int hdOnePro_TICKS_AND_SECONDS_end = clock();
+//  std::cout << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
 
 //TODO: Shall I pass the reference vec here, or the global xyGrid?
 
@@ -228,8 +228,8 @@ int main(int argc, const char * argv[]) {
   * pass by value will make a copy of the argument into the function parameter. In many cases,
   * this is a needless performance hit, as the original argument would have sufficed.
   */
-  int row = 1000;
-  int column = 1000;
+  int row = 100;
+  int column = 100;
 
   std::vector<std::vector<double> > v;
   generate(row, column, v);
@@ -237,40 +237,4 @@ int main(int argc, const char * argv[]) {
   calculateRGB(row, column, v);
   writePPM(row, column);
 
-
-
-
-
-
-
-
-  //    Static/Dynamic Array?
-  //
-  //            The C++ array classes are better behaved than the low-level C array because they know a lot about themselves, and can answer questions C arrays can't. They are able to clean after themselves. And more importantly, they are usually written using templates and/or inlining, which means that what appears to a lot of code in debug resolves to little or no code produced in release build, meaning no difference with their built-in less safe competition.
-  //
-  //    All in all, it falls on two categories:
-  //
-  //    Dynamic arrays
-  //
-  //    Using a pointer to a malloc-ed/new-ed array will be at best as fast as the std::vector version, and a lot less safe (see litb's post).
-  //
-  //    So use a std::vector.
-  //
-  //            Static arrays
-  //
-  //    Using a static array will be at best:
-  //
-  //    as fast as the std::array version
-  //            and a lot less safe.
-
-  //Why?
-
-
-
-  //    //// free dynamically allocated memory
-  //    for( int i = 0 ; i < *row ; i++ )
-  //    {
-  //        delete [] matrix[i] ;
-  //    }
-  //    delete [] matrix ;
 }
