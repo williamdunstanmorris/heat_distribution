@@ -37,8 +37,8 @@ void init(int rows, int columns);
 void fill(std::vector< std::vector<double> >& vec);
 void hDOnePro(std::vector< std::vector<double> > &vec, const double &threshold, string fname);
 void hDFourPro();
-void writePPM(int row, int column);
-void calculateRGB(int row, int column, std::vector< std::vector<double> >& xyGrid);
+void writePPM(std::vector< std::vector<double> >& vec, string fname);
+void calculateRGB(std::vector< std::vector<double> >& xyGrid);
 void print(std::vector< std::vector<double> >& xyGrid, ofstream &file);
 
 
@@ -185,17 +185,17 @@ void calculateRGB(std::vector< std::vector<double> >& vec){
   }
 }
 
-void writePPM(int row, int column){
+void writePPM(std::vector< std::vector<double> >& vec, string fname){
 
   //TODO: Make a file that does appends and does not overwrite, and iterate over the file number
-  ofstream img("tryout.ppm");
+  ofstream img(fname + ".ppm");
   img << "P3" << endl;
-  img << 50 << " " << 50 << endl;
+  img << vec.size() << " " << vec[0].size() << endl;
   img << "255" << endl; //maximum value of picture
 
-  for (int j = 0; j < row; j++)
+  for (int j = 0; j < vec.size(); j++)
   {
-    for (int i = 0; i < column; i++){
+    for (int i = 0; i < vec[j].size(); i++){
       //            cout<< "    [" << xyGrid[j][i] << "]";
       img <<" " << ((int)r[j][i])<< " " << ((int)g[j][i]) << " " <<((int)b[j][i]) << " ";
     }
@@ -210,15 +210,49 @@ void SWITCH(int i){
     case 1: {
       const unsigned int row = 10;
       const unsigned int column = 10;
-      const double threshold = 0.001;
+      const double threshold = 0.01;
       std::vector<std::vector<double> > v;
       generate(row, column, v);
-      string fileString = "#01_10x10_0.001.txt";
+      string fileString = "#01_100x100_0.01";
       hDOnePro(v, threshold, fileString);
+      calculateRGB(v);
+      writePPM(v, fileString);
       break;
     }
     case 2: {
-      cout << "somejlisfjg";
+      const unsigned int row = 10;
+      const unsigned int column = 15;
+      const double threshold = 0.01;
+      std::vector<std::vector<double> > v;
+      generate(row, column, v);
+      string fileString = "#02_250x250_0.01";
+      hDOnePro(v, threshold, fileString);
+      calculateRGB(v);
+      writePPM(v, fileString);
+      break;
+    }
+    case 3: {
+      const unsigned int row = 500;
+      const unsigned int column = 500;
+      const double threshold = 0.01;
+      std::vector<std::vector<double> > v;
+      generate(row, column, v);
+      string fileString = "#03_500x500_0.01";
+      hDOnePro(v, threshold, fileString);
+      calculateRGB(v);
+      writePPM(v, fileString);
+      break;
+    }
+    case 4: {
+      const unsigned int row = 1000;
+      const unsigned int column = 1000;
+      const double threshold = 0.01;
+      std::vector<std::vector<double> > v;
+      generate(row, column, v);
+      string fileString = "#04_1000x1000_0.01";
+      hDOnePro(v, threshold, fileString);
+      calculateRGB(v);
+      writePPM(v, fileString);
       break;
     }
     default: {
@@ -236,7 +270,6 @@ void print(std::vector< std::vector<double> >& vec, ofstream &file) {
     for (int c = 0; c < vec[r].size(); c++) {
       cout << "[" << setw(8) << vec[r][c] << "]";
       file << "[" << setw(8) << vec[r][c] << "]";
-
     }
     cout << endl;
     file<<endl;
@@ -253,9 +286,10 @@ int main(int argc, const char * argv[]) {
   * pass by value will make a copy of the argument into the function parameter. In many cases,
   * this is a needless performance hit, as the original argument would have sufficed.
   */
+  SWITCH(1);
   SWITCH(2);
-
-
+  SWITCH(3);
+  SWITCH(4);
 
 
   //C++ guarantees that the destructor of v will be called when the method executes.
