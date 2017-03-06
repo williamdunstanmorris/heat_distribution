@@ -37,9 +37,10 @@ void init(int rows, int columns);
 void fill(std::vector< std::vector<double> >& vec);
 void hDOnePro(std::vector< std::vector<double> > &vec, const double &threshold, string fname);
 void hDFourPro();
-void writePPM(std::vector< std::vector<double> >& vec, string fname);
+void writePPM(std::vector< std::vector<double> >& vec, string &fname);
 void calculateRGB(std::vector< std::vector<double> >& xyGrid);
 void print(std::vector< std::vector<double> >& xyGrid, ofstream &file);
+void SWITCH(int &i);
 
 
 //------------------------------------------
@@ -130,10 +131,10 @@ void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, s
             accumDifference+=difference;
           }
         }
-        // cout<<"[" << setw(8)<< vec[r][c] << "]";
+        cout<<"[" << setw(8)<< vec[r][c] << "]";
       } // End Column
       // usleep(10000);
-      // cout << endl;
+      cout << endl;
     } // End Row
     //Store last difference calculation into a temporary variable
     storedDiff = diff;
@@ -178,38 +179,36 @@ void calculateRGB(std::vector< std::vector<double> >& vec){
         case 4:
           r[j][i]=0;g[j][i]=0;b[j][i]=255;
               break;
-        default:
-          cout<<"Error handling on RGB"<< endl;
       }
     }
   }
 }
 
-void writePPM(std::vector< std::vector<double> >& vec, string fname){
+void writePPM(std::vector< std::vector<double> > &vec, string &fname){
 
-  //TODO: Make a file that does appends and does not overwrite, and iterate over the file number
-  ofstream img(fname + ".ppm");
-  img << "P3" << endl;
-  img << vec.size() << " " << vec[0].size() << endl;
-  img << "255" << endl; //maximum value of picture
+//  //TODO: Make a file that does appends and does not overwrite, and iterate over the file number
+//  ofstream img(fname + ".ppm");
+//  img << "P3" << endl;
+//  img << vec.size() << " " << vec[0].size() << endl;
+//  img << "255" << endl; //maximum value of picture
 
-  for (int j = 0; j < vec.size(); j++)
-  {
-    for (int i = 0; i < vec[j].size(); i++){
-      //            cout<< "    [" << xyGrid[j][i] << "]";
-      img <<" " << ((int)r[j][i])<< " " << ((int)g[j][i]) << " " <<((int)b[j][i]) << " ";
-    }
-    img << endl;
-  }
-  img.close();
+//  for (int j = 0; j < vec.size(); j++)
+//  {
+//    for (int i = 0; i < vec[j].size(); i++){
+////      img <<" " << ((int)r[j][i])<< " " << ((int)g[j][i]) << " " <<((int)b[j][i]) << " ";
+//
+//    }
+//    img << endl;
+//  }
+//  img.close();
 }
 
-void SWITCH(int i){
+void SWITCH(int &i){
 
   switch(i){
     case 1: {
-      const unsigned int row = 10;
-      const unsigned int column = 10;
+      const unsigned int row = 100;
+      const unsigned int column = 100;
       const double threshold = 0.01;
       std::vector<std::vector<double> > v;
       generate(row, column, v);
@@ -220,8 +219,8 @@ void SWITCH(int i){
       break;
     }
     case 2: {
-      const unsigned int row = 10;
-      const unsigned int column = 15;
+      const unsigned int row = 250;
+      const unsigned int column = 250;
       const double threshold = 0.01;
       std::vector<std::vector<double> > v;
       generate(row, column, v);
@@ -251,8 +250,8 @@ void SWITCH(int i){
       generate(row, column, v);
       string fileString = "#04_1000x1000_0.01";
       hDOnePro(v, threshold, fileString);
-      calculateRGB(v);
-      writePPM(v, fileString);
+//      calculateRGB(v);
+//      writePPM(v, fileString);
       break;
     }
     default: {
@@ -268,10 +267,10 @@ void print(std::vector< std::vector<double> >& vec, ofstream &file) {
 
   for (int r = 0; r < vec.size(); r++) {
     for (int c = 0; c < vec[r].size(); c++) {
-      // cout << "[" << setw(8) << vec[r][c] << "]";
+      cout << "[" << setw(8) << vec[r][c] << "]";
       file << "[" << setw(8) << vec[r][c] << "]";
     }
-    // cout << endl;
+    cout << endl;
     file<<endl;
   }
 }
@@ -286,10 +285,14 @@ int main(int argc, const char * argv[]) {
   * pass by value will make a copy of the argument into the function parameter. In many cases,
   * this is a needless performance hit, as the original argument would have sufficed.
   */
-  SWITCH(1);
-  SWITCH(2);
-  SWITCH(3);
-  SWITCH(4);
+
+    int switch1 = 1;
+    int switch2 = 2;
+
+  SWITCH(switch1);
+  SWITCH(switch2);
+  // SWITCH(3);
+  // SWITCH(4);
 
 
   //C++ guarantees that the destructor of v will be called when the method executes.
