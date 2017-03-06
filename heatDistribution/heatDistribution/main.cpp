@@ -16,9 +16,9 @@ using namespace std;
 // const int columnInputX(3), rowInputY(3);
 // double xyGrid[columnInputX][rowInputY];
 
-std::vector<std::vector<int>> r;
-std::vector<std::vector<int>> g;
-std::vector<std::vector<int>> b;
+std::vector<std::vector<int >> r;
+std::vector<std::vector<int >> g;
+std::vector<std::vector<int >> b;
 
 //Declare an empty 2D array with size determined by use^I
 //Make 3 global vectors r,g,b.
@@ -130,23 +130,23 @@ void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, s
             accumDifference+=difference;
           }
         }
-        cout<<"[" << setw(8)<< vec[r][c] << "]";
+        // cout<<"[" << setw(8)<< vec[r][c] << "]";
       } // End Column
       // usleep(10000);
-      cout << endl;
+      // cout << endl;
     } // End Row
     //Store last difference calculation into a temporary variable
     storedDiff = diff;
     // Calculation of difference
     diff = accumDifference/(vec.size()*(vec[0].size()));
     dynamicRange = diff - storedDiff;
-    cout << "\n-------------------------------------------------\n"<<endl;
+    // cout << "\n-------------------------------------------------\n"<<endl;
 
   } while(dynamicRange >= threshold);
 
   double hdOnePro_TICKS_AND_SECONDS_end = clock();
   print(vec, txtFile);
-  std::cout << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
+  // std::cout << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
   txtFile << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
   txtFile.close();
 }
@@ -268,10 +268,10 @@ void print(std::vector< std::vector<double> >& vec, ofstream &file) {
 
   for (int r = 0; r < vec.size(); r++) {
     for (int c = 0; c < vec[r].size(); c++) {
-      cout << "[" << setw(8) << vec[r][c] << "]";
+      // cout << "[" << setw(8) << vec[r][c] << "]";
       file << "[" << setw(8) << vec[r][c] << "]";
     }
-    cout << endl;
+    // cout << endl;
     file<<endl;
   }
 }
