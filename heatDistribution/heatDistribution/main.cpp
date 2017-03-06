@@ -16,9 +16,9 @@ using namespace std;
 // const int columnInputX(3), rowInputY(3);
 // double xyGrid[columnInputX][rowInputY];
 
-std::vector<std::vector<int >> r;
-std::vector<std::vector<int >> g;
-std::vector<std::vector<int >> b;
+std::vector<std::vector<int > > r;
+std::vector<std::vector<int > > g;
+std::vector<std::vector<int > > b;
 
 //Declare an empty 2D array with size determined by use^I
 //Make 3 global vectors r,g,b.
