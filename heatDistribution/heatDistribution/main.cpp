@@ -35,7 +35,7 @@ int main(int argc, const char * argv[]);
 void generate(unsigned const int& rows, unsigned const int& columns, std::vector< std::vector<double> >& vec);
 void init(int rows, int columns);
 void fill(std::vector< std::vector<double> >& vec);
-void hDOnePro(std::vector< std::vector<double> > &vec, const double &threshold, string fname);
+void hDOnePro(std::vector< std::vector<double> > &vec, const double &threshold, string &fname);
 void hDFourPro();
 void writePPM(std::vector< std::vector<double> >& vec, string &fname);
 void calculateRGB(std::vector< std::vector<double> >& xyGrid);
@@ -60,7 +60,6 @@ void generate(unsigned const int& rows, unsigned const int& columns, std::vector
   fill(vec);
 
 }
-
 
 //------------------------------------------
 /*
@@ -89,7 +88,7 @@ void fill(std::vector< std::vector<double> >& vec) {
 /*
 * Serial Program:
 */
-void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, string fname){
+void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, string &fname){
 
   /*File .txt output in format:
    * #FileNumber_MxN_threshold
@@ -222,7 +221,9 @@ void SWITCH(int &i){
       const unsigned int row = 250;
       const unsigned int column = 250;
       const double threshold = 0.01;
+
       std::vector<std::vector<double> > v;
+
       generate(row, column, v);
       string fileString = "#02_250x250_0.01";
       hDOnePro(v, threshold, fileString);
@@ -233,8 +234,10 @@ void SWITCH(int &i){
     case 3: {
       const unsigned int row = 500;
       const unsigned int column = 500;
+
       const double threshold = 0.01;
       std::vector<std::vector<double> > v;
+
       generate(row, column, v);
       string fileString = "#03_500x500_0.01";
       hDOnePro(v, threshold, fileString);
@@ -288,25 +291,12 @@ int main(int argc, const char * argv[]) {
 
     int switch1 = 1;
     int switch2 = 2;
+    int switch3 = 3;
+    int switch4 = 4;
 
   SWITCH(switch1);
   SWITCH(switch2);
-  // SWITCH(3);
-  // SWITCH(4);
-
-
-  //C++ guarantees that the destructor of v will be called when the method executes.
-  // The destructor of std::vector will ensure any memory it allocated is freed.
-  // As long as the T type of the vector<T> has proper C++ deallocation semantics all will be well.
-
-
-//  for(int r = 0; r < v.size(); r++){
-//    for(int c = 0; c < v[r].size(); c++){
-//      cout<<"[" << setw(8)<< v[r][c] << "]";
-//    }
-//    cout<<endl;
-//  }
-//  calculateRGB(row, column, v);
-//  writePPM(row, column);
+  SWITCH(switch3);
+  SWITCH(switch4);
 
 }
