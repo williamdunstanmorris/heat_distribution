@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <string>
 
-using namespace unistd;
+using namespace std;
 
 /*
 * Declarations:
