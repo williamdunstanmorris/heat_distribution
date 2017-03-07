@@ -35,11 +35,11 @@ int main(int argc, const char * argv[]);
 void generate(unsigned const int& rows, unsigned const int& columns, std::vector< std::vector<double> >& vec);
 void init(int rows, int columns);
 void fill(std::vector< std::vector<double> >& vec);
-void hDOnePro(std::vector< std::vector<double> > &vec, const double &threshold, string &fname);
+void hDOnePro(std::vector< std::vector<double> > &vec, const double &threshold, std::string &fname);
 void hDFourPro();
-void writePPM(std::vector< std::vector<double> >& vec, string &fname);
+void writePPM(std::vector< std::vector<double> >& vec, std::string &fname);
 void calculateRGB(std::vector< std::vector<double> >& xyGrid);
-void print(std::vector< std::vector<double> >& xyGrid, ofstream &file);
+void print(std::vector< std::vector<double> >& xyGrid, std::ofstream &file);
 void SWITCH(int &i);
 
 
@@ -88,7 +88,7 @@ void fill(std::vector< std::vector<double> >& vec) {
 /*
 * Serial Program:
 */
-void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, string &fname){
+void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, std::string &fname){
 
   /*File .txt output in format:
    * #FileNumber_MxN_threshold
@@ -183,7 +183,7 @@ void calculateRGB(std::vector< std::vector<double> >& vec){
   }
 }
 
-void writePPM(std::vector< std::vector<double> > &vec, string &fname){
+void writePPM(std::vector< std::vector<double> > &vec, std::string &fname){
 
 //  //TODO: Make a file that does appends and does not overwrite, and iterate over the file number
 //  ofstream img(fname + ".ppm");
@@ -265,7 +265,7 @@ void SWITCH(int &i){
 
 }
 
-void print(std::vector< std::vector<double> >& vec, ofstream &file) {
+void print(std::vector< std::vector<double> >& vec, std::ofstream &file) {
   //Iterate over size of array instead.
 
   for (int r = 0; r < vec.size(); r++) {
