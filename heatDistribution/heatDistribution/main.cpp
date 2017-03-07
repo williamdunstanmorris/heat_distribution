@@ -88,12 +88,12 @@ void fill(std::vector< std::vector<double> >& vec) {
 /*
 * Serial Program:
 */
-void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, std::string &fname){
+void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, std::string fname){
 
   /*File .txt output in format:
    * #FileNumber_MxN_threshold
    * */
-  ofstream txtFile("sample.txt");
+  ofstream txtFile(fname + ".txt");
 
   //Calculation parameters
   double difference, addedValues, curTemp;
