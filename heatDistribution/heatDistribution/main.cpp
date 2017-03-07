@@ -93,7 +93,7 @@ void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, s
   /*File .txt output in format:
    * #FileNumber_MxN_threshold
    * */
-  ofstream txtFile(fname + ".txt");
+  ofstream txtFile("sample.txt");
 
   //Calculation parameters
   double difference, addedValues, curTemp;
