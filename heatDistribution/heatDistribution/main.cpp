@@ -35,7 +35,7 @@ int main(int argc, const char * argv[]);
 void generate(unsigned const int& rows, unsigned const int& columns, std::vector< std::vector<double> >& vec);
 void init(int rows, int columns);
 void fill(std::vector< std::vector<double> >& vec);
-void hDOnePro(std::vector< std::vector<double> > &vec, const double &threshold, std::string &fname);
+void hDOnePro(std::vector< std::vector<double> > &vec, const double &threshold, std::string fname);
 void hDFourPro();
 void writePPM(std::vector< std::vector<double> >& vec, std::string &fname);
 void calculateRGB(std::vector< std::vector<double> >& xyGrid);
@@ -88,7 +88,7 @@ void fill(std::vector< std::vector<double> >& vec) {
 /*
 * Serial Program:
 */
-void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, std::string &fname){
+void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, std::string fname){
 
   /*File .txt output in format:
    * #FileNumber_MxN_threshold
