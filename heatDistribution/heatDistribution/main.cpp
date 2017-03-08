@@ -35,7 +35,7 @@ int main(int argc, const char * argv[]);
 void generate(unsigned const int& rows, unsigned const int& columns, std::vector< std::vector<double> >& vec);
 void init(int rows, int columns);
 void fill(std::vector< std::vector<double> >& vec);
-void hDOnePro(std::vector< std::vector<double> > &vec, const double &threshold, std::string fname);
+void hDOnePro(std::vector< std::vector<double> > &vec, const double &threshold, std::string &fname);
 void hDFourPro();
 void writePPM(std::vector< std::vector<double> >& vec, std::string &fname);
 void calculateRGB(std::vector< std::vector<double> >& xyGrid);
@@ -80,7 +80,9 @@ void fill(std::vector< std::vector<double> >& vec) {
         //fill all inner nodes with 0s.
         vec[r][c] = 0;
       }
+      cout<<"[" << setw(8)<< vec[r][c] << "]";
     }
+    cout<<endl;
   }
 }
 
@@ -88,19 +90,13 @@ void fill(std::vector< std::vector<double> >& vec) {
 /*
 * Serial Program:
 */
-void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, std::string fname){
+void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, std::string &fname){
 
   /*File .txt output in format:
    * #FileNumber_MxN_threshold
    * */
-
-    FILE *fp;
-
-    fp = fopen(fname + ".txt", "w");
-
-
    //TODO: this does not work...
-  ofstream txtFile(fname + ".txt");
+  ofstream txtFile(fname.c_str(),std::ofstream::out);
 
   //Calculation parameters
   double difference, addedValues, curTemp;
@@ -137,6 +133,7 @@ void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, s
             accumDifference+=difference;
           }
         }
+
         cout<<"[" << setw(8)<< vec[r][c] << "]";
       } // End Column
       // usleep(10000);
@@ -145,7 +142,7 @@ void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, s
     //Store last difference calculation into a temporary variable
     storedDiff = diff;
     // Calculation of difference
-    diff = accumDifference/(vec.size()*(vec[0].size()));
+    diff = accumDifference/(vec.size()-1*(vec[0].size()-1));
     dynamicRange = diff - storedDiff;
     // cout << "\n-------------------------------------------------\n"<<endl;
 
@@ -153,14 +150,11 @@ void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, s
 
   double hdOnePro_TICKS_AND_SECONDS_end = clock();
   print(vec, txtFile);
-  // std::cout << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
 
-    fprintf(fp, "This is some text...\n");
-    fclose(fp);
-
-
-//  txtFile << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
-//  txtFile.close();
+  std:cout<<"[1][1] Temp = "<<vec[1][1]<<endl;
+  std::cout << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
+  txtFile << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
+  txtFile.close();
 }
 
 
@@ -197,64 +191,67 @@ void calculateRGB(std::vector< std::vector<double> >& vec){
 
 void writePPM(std::vector< std::vector<double> > &vec, std::string &fname){
 
-//  //TODO: Make a file that does appends and does not overwrite, and iterate over the file number
-//  ofstream img(fname + ".ppm");
-//  img << "P3" << endl;
-//  img << vec.size() << " " << vec[0].size() << endl;
-//  img << "255" << endl; //maximum value of picture
+ //TODO: Make a file that does appends and does not overwrite, and iterate over the file number
 
-//  for (int j = 0; j < vec.size(); j++)
-//  {
-//    for (int i = 0; i < vec[j].size(); i++){
-////      img <<" " << ((int)r[j][i])<< " " << ((int)g[j][i]) << " " <<((int)b[j][i]) << " ";
-//
-//    }
-//    img << endl;
-//  }
-//  img.close();
+ ofstream img(fname.c_str(), std::ofstream::out);
+ img << "P3" << endl;
+ img << 250 << " " << 250 << endl;
+ img << "255" << endl; //maximum value of picture
+
+ for (int j = 0; j < vec.size(); j++)
+ {
+   for (int i = 0; i < vec[j].size(); i++){
+//      img <<" " << ((int)r[j][i])<< " " << ((int)g[j][i]) << " " <<((int)b[j][i]) << " ";
+
+   }
+   img << endl;
+ }
+ img.close();
 }
 
 void SWITCH(int &i){
 
   switch(i){
     case 1: {
-      const unsigned int row = 10;
-      const unsigned int column = 10;
+      const unsigned int row = 100;
+      const unsigned int column = 100;
       const double threshold = 0.01;
       std::vector<std::vector<double> > v;
       generate(row, column, v);
-      string fileString = "#01_100x100_0.01";
+      std::string fileString = "#01_100x100_0.01.txt";
       hDOnePro(v, threshold, fileString);
-//      calculateRGB(v);
-//      writePPM(v, fileString);
+
+      std::string ppmstring = "#01_100x100_0.01.ppm";
+      calculateRGB(v);
+      writePPM(v, ppmstring);
       break;
     }
     case 2: {
       const unsigned int row = 250;
       const unsigned int column = 250;
       const double threshold = 0.01;
-
       std::vector<std::vector<double> > v;
-
       generate(row, column, v);
-      string fileString = "#02_250x250_0.01";
+      std::string fileString = "#02_250x250.01.txt";
       hDOnePro(v, threshold, fileString);
+
+      std::string ppmstring = "#02_250x250.01.ppm";
       calculateRGB(v);
-      writePPM(v, fileString);
+      writePPM(v, ppmstring);
       break;
     }
     case 3: {
       const unsigned int row = 500;
       const unsigned int column = 500;
-
       const double threshold = 0.01;
       std::vector<std::vector<double> > v;
-
       generate(row, column, v);
-      string fileString = "#03_500x500_0.01";
+      std::string fileString = "#03_500x500.01.txt";
       hDOnePro(v, threshold, fileString);
+
+      std::string ppmstring = "#02_500x500.01.ppm";
       calculateRGB(v);
-      writePPM(v, fileString);
+      writePPM(v, ppmstring);
       break;
     }
     case 4: {
@@ -263,10 +260,12 @@ void SWITCH(int &i){
       const double threshold = 0.01;
       std::vector<std::vector<double> > v;
       generate(row, column, v);
-      string fileString = "#04_1000x1000_0.01";
+      std::string fileString = "#04_1000x1000.01.txt";
       hDOnePro(v, threshold, fileString);
-//      calculateRGB(v);
-//      writePPM(v, fileString);
+
+      std::string ppmstring = "#04_1000x1000.01.ppm";
+      calculateRGB(v);
+      writePPM(v, ppmstring);
       break;
     }
     default: {
@@ -307,8 +306,8 @@ int main(int argc, const char * argv[]) {
     int switch4 = 4;
 
   SWITCH(switch1);
-//  SWITCH(switch2);
-//  SWITCH(switch3);
-//  SWITCH(switch4);
+  SWITCH(switch2);
+  SWITCH(switch3);
+  SWITCH(switch4);
 
 }
