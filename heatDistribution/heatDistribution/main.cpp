@@ -94,6 +94,11 @@ void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, s
    * #FileNumber_MxN_threshold
    * */
 
+    FILE *fp;
+
+    fp = fopen(fname + ".txt", "w");
+
+
    //TODO: this does not work...
   ofstream txtFile(fname + ".txt");
 
@@ -149,8 +154,13 @@ void hDOnePro(std::vector< std::vector<double> >& vec,const double &threshold, s
   double hdOnePro_TICKS_AND_SECONDS_end = clock();
   print(vec, txtFile);
   // std::cout << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
-  txtFile << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
-  txtFile.close();
+
+    fprintf(fp, "This is some text...\n");
+    fclose(fp);
+
+
+//  txtFile << "One Processor: \nThreshold Level: " << threshold <<"\nFinal Dynamic Range to Break: " << dynamicRange <<"\nIteration Count: "<<ic<<"\nTicks: " << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: " << ((float)hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start)/CLOCKS_PER_SEC << "s" << std::endl;
+//  txtFile.close();
 }
 
 
@@ -208,15 +218,15 @@ void SWITCH(int &i){
 
   switch(i){
     case 1: {
-      const unsigned int row = 100;
-      const unsigned int column = 100;
+      const unsigned int row = 10;
+      const unsigned int column = 10;
       const double threshold = 0.01;
       std::vector<std::vector<double> > v;
       generate(row, column, v);
       string fileString = "#01_100x100_0.01";
       hDOnePro(v, threshold, fileString);
-      calculateRGB(v);
-      writePPM(v, fileString);
+//      calculateRGB(v);
+//      writePPM(v, fileString);
       break;
     }
     case 2: {
@@ -297,8 +307,8 @@ int main(int argc, const char * argv[]) {
     int switch4 = 4;
 
   SWITCH(switch1);
-  SWITCH(switch2);
-  SWITCH(switch3);
-  SWITCH(switch4);
+//  SWITCH(switch2);
+//  SWITCH(switch3);
+//  SWITCH(switch4);
 
 }
