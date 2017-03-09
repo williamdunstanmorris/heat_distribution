@@ -3,4 +3,4 @@
 #$ -l hvmem=8GB
 #$ -l h_stack=memory
 #$ -pe smp 1
-#$ ./a.out
+#$ a.out
