@@ -51,7 +51,7 @@ void generate(unsigned const int &rows,
   {
     int r, c;
     double average = 0.0;
-  # pragma omp parallel shared ( vec, average ) private (r, c) if(parallel)
+    # pragma omp parallel shared ( vec, average ) private (r, c) if(parallel)
     { //West Plate
       # pragma omp for
       for (r = 1; r < vec.size(); r++)
@@ -59,68 +59,68 @@ void generate(unsigned const int &rows,
         vec[r][0] = 100.0;
       }
       //East Plate
-  # pragma omp for
+      # pragma omp for
       for ( r = 1; r < vec.size(); r++ )
       {
         vec[r][vec[0].size()-1] = 100.0;
       }
       //South Plate
-  # pragma omp for
+      # pragma omp for
       for ( c = 0; c < vec[0].size(); c++ )
       {
         vec[vec.size()-1][c] = 100.0;
       }
       //North Plate
-  # pragma omp for
+      # pragma omp for
       for ( c = 0; c < vec[0].size(); c++ )
       {
         vec[0][c] = 0.0;
       }
-  //Calulcate Estimate values based on boundary values:
-  # pragma omp for reduction (+:average)
-  for (r = 1; r < vec.size()-1; r++)
-  {
-    average = average + vec[r][0] + vec[r][vec[0].size()-1];
-  }
+      //Calulcate Estimate values based on boundary values:
+      # pragma omp for reduction (+:average)
+      for (r = 1; r < vec.size()-1; r++)
+      {
+        average = average + vec[r][0] + vec[r][vec[0].size()-1];
+      }
 
-  # pragma omp for reduction (+:average)
-  for (c = 1; c < vec[0].size(); c++)
-  {
-    average = average + vec[vec.size()-1][c] + vec[0][c];
-  }
+      # pragma omp for reduction (+:average)
+      for (c = 1; c < vec[0].size(); c++)
+      {
+        average = average + vec[vec.size()-1][c] + vec[0][c];
+      }
 
-  # pragma omp for
-  for(r=1; r < vec.size()-1; r++)
-  {
-    for(c=1; c<vec[0].size()-1; c++)
-    {
-      vec[r][c] = average;
+      # pragma omp for
+      for(r=1; r < vec.size()-1; r++)
+      {
+        for(c=1; c<vec[0].size()-1; c++)
+        {
+          vec[r][c] = average;
+        }
+      }
     }
-  }
-}
 
-  average = average/(double)(2 * vec.size() + 2 * vec[0].size() - 4);
+    average = average/(double)(2 * vec.size() + 2 * vec[0].size() - 4);
 
-  # pragma omp parallel shared (average,vec) private (r,c)
-  # pragma omp for
-  for(r=1; r < vec.size()-1; r++)
-  {
-    for(c=1; c<vec[0].size()-1; c++)
+    # pragma omp parallel shared (average,vec) private (r,c)
+    # pragma omp for
+    for(r=1; r < vec.size()-1; r++)
     {
-      vec[r][c] = average;
+      for(c=1; c<vec[0].size()-1; c++)
+      {
+        vec[r][c] = average;
+      }
     }
-  }
 
-for (int r = 0; r < vec.size(); r++)
-{
-  for (int c = 0; c < vec[0].size(); c++)
-  {
-         cout << "[" << setw(8) << vec[r][c] << "]";
-  }
-  cout<<endl;
-}
+    for (int r = 0; r < vec.size(); r++)
+    {
+      for (int c = 0; c < vec[0].size(); c++)
+      {
+        cout << "[" << setw(8) << vec[r][c] << "]";
+      }
+      cout<<endl;
+    }
 
-}
+  }
 
   //------------------------------------------
   /*
@@ -275,7 +275,6 @@ for (int r = 0; r < vec.size(); r++)
           //   cout<<endl;
           // }
 
-
           currentTotal = 0.0;
           #pragma omp parallel shared(diff, currentTotal,previousTotal) private (r,c,threadDiff)
           {
@@ -292,23 +291,23 @@ for (int r = 0; r < vec.size(); r++)
 
           cout<<"Current Total = "<<currentTotal<<endl;
 
-            #pragma omp critical
-            diff = (previousTotal - currentTotal);
-            //Invert any negative values i.e. find the absolute value:
-            if (diff<0.0)
-            {
-              diff=diff*-1;
-              cout<<"DIfference Inverted"<<endl;
-            }
-            if (diff>tolerence)
-            {
-              previousTotal = currentTotal;
-            }
+          #pragma omp critical
+          diff = (previousTotal - currentTotal);
+          //Invert any negative values i.e. find the absolute value:
+          if (diff<0.0)
+          {
+            diff=diff*-1;
+            cout<<"DIfference Inverted"<<endl;
+          }
+          if (diff>tolerence)
+          {
+            previousTotal = currentTotal;
+          }
 
-            cout<<"Previous Total = "<<previousTotal<<endl;
-            cout<<"Difference = "<<diff<<endl;
+          cout<<"Previous Total = "<<previousTotal<<endl;
+          cout<<"Difference = "<<diff<<endl;
 
-            ic++;
+          ic++;
 
           // }//Finish Parallel BLOCK
         }
@@ -342,151 +341,177 @@ for (int r = 0; r < vec.size(); r++)
         << std::endl;
 
         //Print Final Table Results to .txt File.
-        print(vec, txtFile);
+        // print(vec, txtFile);
         txtFile.close();
       }
 
-
-
-
-      //------------------------------------------
       /*
-      * Calculate RGB Vectors from Temperature Grid:
+      Calculating the standard deviation:  if you have an array T representing the temperature of each point on the rectangle, your solution will calculate values for every element T[i][j]. The question asks you to do this using one processor, and using four processors.
+
+      So, you will have two solutions for T, giving two values for each point T[i][j]. For each point, subtract one from the other to find the difference, then square it, then add all the squared differences together and divide by the number of things you added together. This is the variance of the differences, and then take the square root to get the standard deviation.
       */
-      void calculateRGB(std::vector<std::vector<double> > &vec,
-        std::vector<std::vector<int> > &r,
-        std::vector<std::vector<int> > &g,
-        std::vector<std::vector<int> > &b )
+
+      double deviation(std::vector<std::vector<double> > &vec,
+        std::vector<std::vector<double> > &vec1,
+        std::ofstream &file)
         {
-          for (int j = 0; j < vec.size(); j++)
+          double difference;
+          double addedDifferences=0;
+          for (int j = 1; j < vec.size()-1; j++)
           {
-            for (int i = 0; i < vec[j].size(); i++)
+            for (int i = 1; i < vec[j].size()-1; i++)
             {
-
-              double f = vec[j][i] / 100; //Get value between 0:1
-              double a = (1 - f) / 0.25;    //invert and group
-
-              int X = (int) floor(a);    //this is the integer part
-              int Y = (int) floor(255 * (a - X)); //fractional part from 0 to 255
-
-              switch (X)
+              if(vec[j][i] > vec1[j][i])
               {
-                case 0:
-                r[j][i] = 255;
-                g[j][i] = Y;
-                b[j][i] = 0;
-                break;
-                case 1:
-                r[j][i] = 255 - Y;
-                g[j][i] = 255;
-                b[j][i] = 0;
-                break;
-                case 2:
-                r[j][i] = 0;
-                g[j][i] = 255;
-                b[j][i] = Y;
-                break;
-                case 3:
-                r[j][i] = 0;
-                g[j][i] = 255 - Y;
-                b[j][i] = 255;
-                break;
-                case 4:
-                r[j][i] = 0;
-                g[j][i] = 0;
-                b[j][i] = 255;
-                break;
+                difference = std::pow(2.0,(vec[j][i] - vec1[j][i]));
               }
+              else
+              {
+                difference = std::pow(2.0,(vec1[j][i]-vec[j][i]));
+              }
+
+              addedDifferences+=difference;
             }
           }
+          double varianceDifferences = addedDifferences/(vec.size()-2*vec[0].size()-2);
+          return sqrt(varianceDifferences);
         }
+
         //------------------------------------------
         /*
-        * Write PPM bitmap file from RGB Vectors
+        * Calculate RGB Vectors from Temperature Grid:
         */
-        void writePPM(const unsigned int &row,
-          const unsigned int &col,
-          std::vector<std::vector<double> > &vec,
+        void calculateRGB(std::vector<std::vector<double> > &vec,
           std::vector<std::vector<int> > &r,
           std::vector<std::vector<int> > &g,
-          std::vector<std::vector<int> > &b ,
-          std::string &fname)
+          std::vector<std::vector<int> > &b )
           {
-
-            ofstream img(fname.c_str(), std::ofstream::out);
-            img << "P3" << endl;
-            img << col << " " << row << endl;
-            img << "255" << endl; //maximum value of picture
-
             for (int j = 0; j < vec.size(); j++)
             {
               for (int i = 0; i < vec[j].size(); i++)
               {
-                img << ((int) r[j][i]) << " " << ((int) g[j][i]) << " " << ((int) b[j][i]) << " ";
 
+                double f = vec[j][i] / 100; //Get value between 0:1
+                double a = (1 - f) / 0.25;    //invert and group
+
+                int X = (int) floor(a);    //this is the integer part
+                int Y = (int) floor(255 * (a - X)); //fractional part from 0 to 255
+
+                switch (X)
+                {
+                  case 0:
+                  r[j][i] = 255;
+                  g[j][i] = Y;
+                  b[j][i] = 0;
+                  break;
+                  case 1:
+                  r[j][i] = 255 - Y;
+                  g[j][i] = 255;
+                  b[j][i] = 0;
+                  break;
+                  case 2:
+                  r[j][i] = 0;
+                  g[j][i] = 255;
+                  b[j][i] = Y;
+                  break;
+                  case 3:
+                  r[j][i] = 0;
+                  g[j][i] = 255 - Y;
+                  b[j][i] = 255;
+                  break;
+                  case 4:
+                  r[j][i] = 0;
+                  g[j][i] = 0;
+                  b[j][i] = 255;
+                  break;
+                }
               }
-
-              img << endl;
             }
-
-            img.close();
           }
-
-          void print(std::vector<std::vector<double> > &vec, std::ofstream &file)
-          {
-            //Iterate over size of array instead.
-
-            for (int r = 0; r < vec.size(); r++)
+          //------------------------------------------
+          /*
+          * Write PPM bitmap file from RGB Vectors
+          */
+          void writePPM(const unsigned int &row,
+            const unsigned int &col,
+            std::vector<std::vector<double> > &vec,
+            std::vector<std::vector<int> > &r,
+            std::vector<std::vector<int> > &g,
+            std::vector<std::vector<int> > &b ,
+            std::string &fname)
             {
-              for (int c = 0; c < vec[r].size(); c++)
+
+              ofstream img(fname.c_str(), std::ofstream::out);
+              img << "P3" << endl;
+              img << col << " " << row << endl;
+              img << "255" << endl; //maximum value of picture
+
+              for (int j = 0; j < vec.size(); j++)
               {
-                //      cout << "[" << setw(8) << vec[r][c] << "]";
-                file << "[" << setw(8) << vec[r][c] << "]";
+                for (int i = 0; i < vec[j].size(); i++)
+                {
+                  img << ((int) r[j][i]) << " " << ((int) g[j][i]) << " " << ((int) b[j][i]) << " ";
+
+                }
+
+                img << endl;
               }
 
-              //    cout << endl;
-              file << endl;
+              img.close();
             }
-          }
+
+            void print(std::vector<std::vector<double> > &vec, std::ofstream &file)
+            {
+              //Iterate over size of array instead.
+
+              for (int r = 0; r < vec.size(); r++)
+              {
+                for (int c = 0; c < vec[r].size(); c++)
+                {
+                  //      cout << "[" << setw(8) << vec[r][c] << "]";
+                  file << "[" << setw(8) << vec[r][c] << "]";
+                }
+
+                //    cout << endl;
+                file << endl;
+              }
+            }
 
 
-          int main(int argc, const char *argv[])
-          {
-            /*
-            * pass by value will make a copy of the argument into the function parameter. In many cases,
-            * this is a needless performance hit, as the original argument would have sufficed.
-            */
-            const unsigned int row = 100;
-            const unsigned int column = 100;
-            const double tolerence = 0.1;
-            std::vector<std::vector<double> > v;
-            std::vector<std::vector<int> > r;
-            std::vector<std::vector<int> > g;
-            std::vector<std::vector<int> > b;
+            int main(int argc, const char *argv[])
+            {
+              /*
+              * pass by value will make a copy of the argument into the function parameter. In many cases,
+              * this is a needless performance hit, as the original argument would have sufficed.
+              */
+              const unsigned int row = 100;
+              const unsigned int column = 100;
+              const double tolerence = 0.1;
+              std::vector<std::vector<double> > v;
+              std::vector<std::vector<double> > v1;
 
-            std::string fileString = "FOUR#01_50x50.01.txt";
-            std::string ppmstring = "FOUR#01_50x50.01.ppm";
-            bool parallel = true;
+              std::vector<std::vector<int> > r;
+              std::vector<std::vector<int> > g;
+              std::vector<std::vector<int> > b;
 
-            generate(row, column, v,r,g,b);
-            fill(v, parallel);
-            hDFourPro(row, column, v, tolerence, fileString);
-            calculateRGB(v, r,g,b );
-            // writePPM(row, column,v,r,g,b, ppmstring);
+              std::string ONE_fileString = "ONE_100x100.01.txt";
+              std::string ONE_ppmstring = "ONE_100x100.01.ppm";
+              std::string FOUR_fileString = "FOUR_100x100.01.txt";
+              std::string FOUR_ppmstring = "FOUR_100x100.01.ppm";
 
-            //    const unsigned int row2 = 50;
-            //    const unsigned int column2 = 80;
-            //    const double tolerence2 = 0.1;
-            //    std::vector<std::vector<double> > v2;
-            //    std::vector<std::vector<int> > r2;
-            //    std::vector<std::vector<int> > g2;
-            //    std::vector<std::vector<int> > b2;
-            //
-            //    std::string fileString2 = "#02_20x20.01.txt";
-            //    std::string ppmstring2 = "#02_20x20.01.ppm";
-            //
-            //    generate(row2, column2, v2,r2,g2,b2);
-            //    hDOnePro(row2, column2, v2, tolerence2, fileString2);
-            //    calculateRGB(v2, r2,g2,b2 );
-            //    writePPM(row2, column2,v2, r2,g2,b2, ppmstring2);
-          }
+              bool parallel = true;
+              bool single = false;
+
+              generate(row, column, v,r,g,b);
+              fill(v, single);
+              hDFourPro(row, column, v, tolerence, ONE_fileString);
+              calculateRGB(v, r,g,b );
+              writePPM(row, column,v,r,g,b, ONE_ppmstring);
+
+              generate(row, column, v1,r,g,b);
+              fill(v1, parallel);
+              hDFourPro(row, column, v1, tolerence, FOUR_fileString);
+              calculateRGB(v1, r,g,b );
+              writePPM(row, column,v1,r,g,b, FOUR_ppmstring);
+
+            }

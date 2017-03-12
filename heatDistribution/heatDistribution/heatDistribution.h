@@ -16,7 +16,7 @@ void generate(unsigned const int &rows,
               std::vector<std::vector<int> > &g,
               std::vector<std::vector<int> > &b);
 
-void fill(std::vector<std::vector<double> > &vec, bool &parallel);
+void fill(std::vector<std::vector<double> > &vec);
 
 void hDOnePro(const unsigned int &row,
               const unsigned int &col,
@@ -29,6 +29,10 @@ void hDFourPro(const unsigned int &row,
               std::vector<std::vector<double> > &vec,
               const double &tolerence,
               std::string &fname);
+
+double deviation(std::vector<std::vector<double> > &vec,
+                std::vector<std::vector<double> > &vec1,
+                std::ofstream &file);
 
 void writePPM(const unsigned int &row,
               const unsigned int &col,
@@ -44,8 +48,5 @@ void calculateRGB(std::vector<std::vector<double> > &xyGrid,
                   std::vector<std::vector<int> > &b );
 
 void print(std::vector<std::vector<double> > &xyGrid, std::ofstream &file);
-
-double preciseTol(double val, double tolerence);
-
 
 #endif /* heatDistribution_h */
