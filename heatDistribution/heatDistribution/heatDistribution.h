@@ -16,7 +16,7 @@ void generate(unsigned const int &rows,
               std::vector<std::vector<int> > &g,
               std::vector<std::vector<int> > &b);
 
-void fill(std::vector<std::vector<double> > &vec);
+void fill(std::vector<std::vector<double> > &vec, bool &parallel);
 
 void hDOnePro(const unsigned int &row,
               const unsigned int &col,
