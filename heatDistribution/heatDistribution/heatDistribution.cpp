@@ -25,7 +25,6 @@ using namespace std;
 /*
  *Function Declarations:
  */
-//TODO: What is an easier/ less performance consumptive way of declaring row and column here? N.B: they iterate over.
 int main(int argc, const char *argv[]);
 
 //------------------------------------------
@@ -291,8 +290,8 @@ int main(int argc, const char *argv[])
      * pass by value will make a copy of the argument into the function parameter. In many cases,
      * this is a needless performance hit, as the original argument would have sufficed.
      */
-    const unsigned int row = 50;
-    const unsigned int column = 50;
+    const unsigned int row = 500;
+    const unsigned int column = 500;
     const double tolerence = 0.1;
     std::vector<std::vector<double> > v;
     std::vector<std::vector<int> > r;
@@ -308,20 +307,19 @@ int main(int argc, const char *argv[])
     writePPM(row, column,v,r,g,b, ppmstring);
 
     
-    
-    const unsigned int row2 = 50;
-    const unsigned int column2 = 80;
-    const double tolerence2 = 0.1;
-    std::vector<std::vector<double> > v2;
-    std::vector<std::vector<int> > r2;
-    std::vector<std::vector<int> > g2;
-    std::vector<std::vector<int> > b2;
-    
-    std::string fileString2 = "#02_20x20.01.txt";
-    std::string ppmstring2 = "#02_20x20.01.ppm";
-
-    generate(row2, column2, v2,r2,g2,b2);
-    hDOnePro(row2, column2, v2, tolerence2, fileString2);
-    calculateRGB(v2, r2,g2,b2 );
-    writePPM(row2, column2,v2, r2,g2,b2, ppmstring2);
+//    const unsigned int row2 = 50;
+//    const unsigned int column2 = 80;
+//    const double tolerence2 = 0.1;
+//    std::vector<std::vector<double> > v2;
+//    std::vector<std::vector<int> > r2;
+//    std::vector<std::vector<int> > g2;
+//    std::vector<std::vector<int> > b2;
+//    
+//    std::string fileString2 = "#02_20x20.01.txt";
+//    std::string ppmstring2 = "#02_20x20.01.ppm";
+//
+//    generate(row2, column2, v2,r2,g2,b2);
+//    hDOnePro(row2, column2, v2, tolerence2, fileString2);
+//    calculateRGB(v2, r2,g2,b2 );
+//    writePPM(row2, column2,v2, r2,g2,b2, ppmstring2);
 }
