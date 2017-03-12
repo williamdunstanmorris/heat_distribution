@@ -6,6 +6,7 @@
 #include <numeric>
 #include <cstdlib>
 #include <cmath>
+#include <omp.h>
 #include "heatDistribution.h"
 
 //#include <usleep>
@@ -78,11 +79,11 @@ void fill(std::vector<std::vector<double> > &vec)
             else if (r == vec.size() - 1)
             {
                 vec[r][c] = 100;
-            }//end boundary fill
+            }
             else
             {
-                //fill all inner nodes with 0s.
-                vec[r][c] = 0;
+                //Fill all inner nodes with 0s.
+                vec[r][c] = 90;
             }
 
             cout << "[" << setw(8) << vec[r][c] << "]";
@@ -117,7 +118,11 @@ void hDOnePro(const unsigned int &row,
     double previousTotal = 0;
     double currentTotal =0;
     double diff = 0;
-    double hdOnePro_TICKS_AND_SECONDS_start = clock();
+
+    //Performance Declarations:
+    double hdOnePro_TICKS_AND_SECONDS_START = clock();
+    double hdOnePro_omp_wtime_START = omp_get_wtime();
+    double hdOnePro_omp_ticks_START = omp_get_wtick();
 
     do
     {
@@ -140,8 +145,8 @@ void hDOnePro(const unsigned int &row,
 //            cout<<endl;
         }
 
-        cout<<"CurTotal = "<<currentTotal<<endl;
-        cout<<"PreviousTotal = "<<previousTotal<<endl;
+        // cout<<"CurTotal = "<<currentTotal<<endl;
+        // cout<<"PreviousTotal = "<<previousTotal<<endl;
 
         //Calculate the total difference between the previous total and current total.
         diff = (previousTotal - currentTotal);
@@ -164,17 +169,31 @@ void hDOnePro(const unsigned int &row,
     //---------------------------------------------------
 
     //Calculate the wall clock time spent on do{}while();
-    double hdOnePro_TICKS_AND_SECONDS_end = clock();
+    double hdOnePro_TICKS_AND_SECONDS_END = clock();
+    double hdOnePro_omp_wtime_END = omp_get_wtime();
+    double hdOnePro_omp_ticks_END = omp_get_wtick();
 
-    cout << "One Processor: \nTolerence Level: " <<tolerence<<"\nFinal Difference Between Grids: "<<diff<< "\nIteration Count: " << ic << "\nTicks: "
-    << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: "
-    << ((float) hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start) / CLOCKS_PER_SEC << "s"
+    cout << "\n*************************\nhdOnePro(): One Processor:"
+    <<"\nGrid_SPEC: (WxH) " << col << "x" << row
+    <<"\nTolerance Level: " << tolerence
+    <<"\nFinal accumulative difference between grids: "<<diff
+    << "\nIteration Count: " << ic
+    << "\nCPU Time(Ticks): " << hdOnePro_TICKS_AND_SECONDS_END - hdOnePro_TICKS_AND_SECONDS_START
+    << "\nCPU Time(Seconds): " << ((float) hdOnePro_TICKS_AND_SECONDS_END - hdOnePro_TICKS_AND_SECONDS_START) / CLOCKS_PER_SEC << "s"
+    << "\nOMP Wall Time(Seconds): "<< hdOnePro_omp_wtime_END - hdOnePro_omp_wtime_START <<"s"
+    << "\nOMP Timer Precision(Seconds): "<< hdOnePro_omp_ticks_END - hdOnePro_omp_ticks_START
     << std::endl;
 
-    //Print Specs to .txt File.
-    txtFile << "One Processor: \nTolerence Level: " <<tolerence<<"\nFinal Difference Between Grids: "<<diff<< "\nIteration Count: " << ic << "\nTicks: "
-    << hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start << "\nSeconds: "
-    << ((float) hdOnePro_TICKS_AND_SECONDS_end - hdOnePro_TICKS_AND_SECONDS_start) / CLOCKS_PER_SEC << "s"
+    txtFile << "\n*************************\nhdOnePro(): One Processor:"
+    <<"\nGrid_SPEC: (WxH) " << col << "x" << row
+    <<"\nTolerance Level: " << tolerence
+    <<"\nFinal accumulative difference between grids: "<<diff
+    << "\nIteration Count: " << ic
+    << "\nCPU Time(Ticks): " << hdOnePro_TICKS_AND_SECONDS_END - hdOnePro_TICKS_AND_SECONDS_START
+    << "\nCPU Time(Seconds): " << ((float) hdOnePro_TICKS_AND_SECONDS_END - hdOnePro_TICKS_AND_SECONDS_START) / CLOCKS_PER_SEC << "s"
+    << "\nOMP Wall Time(Seconds): "<< hdOnePro_omp_wtime_END - hdOnePro_omp_wtime_START <<"s"
+    << "\nOMP Timer Precision(Seconds): "<< hdOnePro_omp_ticks_END - hdOnePro_omp_ticks_START
+    << "\n********************************\nFINAL GRID: \n***********************************"
     << std::endl;
 
     //Print Final Table Results to .txt File.
@@ -290,14 +309,14 @@ int main(int argc, const char *argv[])
      * pass by value will make a copy of the argument into the function parameter. In many cases,
      * this is a needless performance hit, as the original argument would have sufficed.
      */
-    const unsigned int row = 500;
-    const unsigned int column = 500;
+    const unsigned int row = 100;
+    const unsigned int column = 100;
     const double tolerence = 0.1;
     std::vector<std::vector<double> > v;
     std::vector<std::vector<int> > r;
     std::vector<std::vector<int> > g;
     std::vector<std::vector<int> > b;
-    
+
     std::string fileString = "#01_50x50.01.txt";
     std::string ppmstring = "#01_50x50.01.ppm";
 
@@ -306,7 +325,6 @@ int main(int argc, const char *argv[])
     calculateRGB(v, r,g,b );
     writePPM(row, column,v,r,g,b, ppmstring);
 
-    
 //    const unsigned int row2 = 50;
 //    const unsigned int column2 = 80;
 //    const double tolerence2 = 0.1;
@@ -314,7 +332,7 @@ int main(int argc, const char *argv[])
 //    std::vector<std::vector<int> > r2;
 //    std::vector<std::vector<int> > g2;
 //    std::vector<std::vector<int> > b2;
-//    
+//
 //    std::string fileString2 = "#02_20x20.01.txt";
 //    std::string ppmstring2 = "#02_20x20.01.ppm";
 //
