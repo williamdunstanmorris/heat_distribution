@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		58F8BA2402781EE7F3B5789B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F8BB07416D5F69A119BE24 /* main.cpp */; };
+		58F8BA2402781EE7F3B5789B /* heatDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58F8BB07416D5F69A119BE24 /* heatDistribution.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +23,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		10D4851D1E747D0E006F705E /* heatDistribution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = heatDistribution.h; sourceTree = "<group>"; };
 		58F8B366A31B3C12D0145736 /* heatDistribution */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = heatDistribution; sourceTree = BUILT_PRODUCTS_DIR; };
-		58F8BB07416D5F69A119BE24 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		58F8BB07416D5F69A119BE24 /* heatDistribution.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = heatDistribution.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,7 +50,8 @@
 		58F8BD42122C13D43BB848C4 /* heatDistribution */ = {
 			isa = PBXGroup;
 			children = (
-				58F8BB07416D5F69A119BE24 /* main.cpp */,
+				58F8BB07416D5F69A119BE24 /* heatDistribution.cpp */,
+				10D4851D1E747D0E006F705E /* heatDistribution.h */,
 			);
 			path = heatDistribution;
 			sourceTree = "<group>";
@@ -112,7 +114,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58F8BA2402781EE7F3B5789B /* main.cpp in Sources */,
+				58F8BA2402781EE7F3B5789B /* heatDistribution.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +232,7 @@
 				58F8BCD9E2BB291B9AB8258D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		58F8BFF1DBE3BC2AA7978968 /* Build configuration list for PBXProject "heatDistribution" */ = {
 			isa = XCConfigurationList;
