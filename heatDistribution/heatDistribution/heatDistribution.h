@@ -24,6 +24,12 @@ void hDOnePro(const unsigned int &row,
               const double &tolerence,
               std::string &fname);
 
+void hDFourPro(const unsigned int &row,
+              const unsigned int &col,
+              std::vector<std::vector<double> > &vec,
+              const double &tolerence,
+              std::string &fname);
+
 void writePPM(const unsigned int &row,
               const unsigned int &col,
               std::vector<std::vector<double> > &vec,

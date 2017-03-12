@@ -8,19 +8,10 @@
 #include <cmath>
 #include <omp.h>
 #include "heatDistribution.h"
-
 //#include <usleep>
 
 using namespace std;
 
-/*
- * Declarations:
- */
-//------------------------------------------
-
-//std::vector<std::vector<int> > r;
-//std::vector<std::vector<int> > g;
-//std::vector<std::vector<int> > b;
 
 //------------------------------------------
 /*
@@ -47,15 +38,6 @@ void generate(unsigned const int &rows,
     g.resize(rows, std::vector<int>(columns, 0));
     b.resize(rows, std::vector<int>(columns, 0));
     fill(vec);
-}
-
-double preciseTol(double val, double tolerence)
-{
-    double tempA = val / tolerence;
-    int ta = (int) tempA;
-    tempA = ((double) ta) * tolerence;
-
-    return tempA;
 }
 
 //------------------------------------------
@@ -111,9 +93,6 @@ void hDOnePro(const unsigned int &row,
     //Count the amount of iterations:
     int ic = -1;
 
-    //Difference tolerance parameters:
-    std::vector<double> differences;
-
     //Calculation parameters
     double previousTotal = 0;
     double currentTotal =0;
@@ -136,18 +115,11 @@ void hDOnePro(const unsigned int &row,
                 vec[r][c] = ((0.25)
                           * ( (vec[r - 1][c]) + (vec[r][c + 1]) + (vec[r + 1][c]) + (vec[r][c - 1]) ) );
 
-//                cout<<"[" <<setw(8)<< vec[r][c]<<"]";
-
                 //Store the temperature in an accumulative total of temp values.
                 currentTotal+=vec[r][c];
 
             }
-//            cout<<endl;
         }
-
-        // cout<<"CurTotal = "<<currentTotal<<endl;
-        // cout<<"PreviousTotal = "<<previousTotal<<endl;
-
         //Calculate the total difference between the previous total and current total.
         diff = (previousTotal - currentTotal);
 
@@ -199,6 +171,100 @@ void hDOnePro(const unsigned int &row,
     //Print Final Table Results to .txt File.
     print(vec, txtFile);
     txtFile.close();
+}
+
+void hDFourPro(const unsigned int &row,
+              const unsigned int &col,
+              std::vector<std::vector<double> > &vec,
+              const double &tolerence,
+              std::string &fname)
+{
+  /*File .txt output in format:
+   * #FileNumber_MxN_threshold
+   * */
+  ofstream txtFile(fname.c_str(), std::ofstream::out);
+
+  //Count the amount of iterations:
+  int ic = -1;
+
+  //Calculation parameters
+  double previousTotal = 0;
+  double currentTotal =0;
+  double diff = 0;
+
+  //Performance Declarations:
+  double hdFourPro_TICKS_AND_SECONDS_START = clock();
+  double hdFourPro_omp_wtime_START = omp_get_wtime();
+  double hdFourPro_omp_ticks_START = omp_get_wtick();
+
+  do
+  {
+      ic++;
+      currentTotal = 0;
+      //---------------------------------------------------
+      for (int r = 1; r < row - 1; r++)
+      {
+          for (int c = 1; c < col - 1; c++)
+          {
+              vec[r][c] = ((0.25)
+                        * ( (vec[r - 1][c]) + (vec[r][c + 1]) + (vec[r + 1][c]) + (vec[r][c - 1]) ) );
+
+              //Store the temperature in an accumulative total of temp values.
+              currentTotal+=vec[r][c];
+
+          }
+      }
+      //Calculate the total difference between the previous total and current total.
+      diff = (previousTotal - currentTotal);
+
+      //Invert any negative values i.e. find the absolute value:
+      if (diff<0.0)
+      {
+          diff=diff*-1;
+      }
+
+      if (diff>tolerence)
+      {
+          previousTotal = currentTotal;
+      }
+
+      //This difference should decrease per iteration:
+      cout<<"Accum Diff = "<<diff<<endl;
+  }
+  while (diff>tolerence);
+  //---------------------------------------------------
+
+  //Calculate the wall clock time spent on do{}while();
+  double hdFourPro_TICKS_AND_SECONDS_END = clock();
+  double hdFourPro_omp_wtime_END = omp_get_wtime();
+  double hdFourPro_omp_ticks_END = omp_get_wtick();
+
+  cout << "\n*************************\nhdOnePro(): One Processor:"
+  <<"\nGrid_SPEC: (WxH) " << col << "x" << row
+  <<"\nTolerance Level: " << tolerence
+  <<"\nFinal accumulative difference between grids: "<<diff
+  << "\nIteration Count: " << ic
+  << "\nCPU Time(Ticks): " << hdFourPro_TICKS_AND_SECONDS_END - hdFourPro_TICKS_AND_SECONDS_START
+  << "\nCPU Time(Seconds): " << ((float) hdFourPro_TICKS_AND_SECONDS_END - hdFourPro_TICKS_AND_SECONDS_START) / CLOCKS_PER_SEC << "s"
+  << "\nOMP Wall Time(Seconds): "<< hdFourPro_omp_wtime_END - hdFourPro_omp_wtime_START <<"s"
+  << "\nOMP Timer Precision(Seconds): "<< hdFourPro_omp_ticks_END - hdFourPro_omp_ticks_START
+  << std::endl;
+
+  txtFile << "\n*************************\nhdOnePro(): One Processor:"
+  <<"\nGrid_SPEC: (WxH) " << col << "x" << row
+  <<"\nTolerance Level: " << tolerence
+  <<"\nFinal accumulative difference between grids: "<<diff
+  << "\nIteration Count: " << ic
+  << "\nCPU Time(Ticks): " << hdFourPro_TICKS_AND_SECONDS_END - hdFourPro_TICKS_AND_SECONDS_START
+  << "\nCPU Time(Seconds): " << ((float) hdFourPro_TICKS_AND_SECONDS_END - hdFourPro_TICKS_AND_SECONDS_START) / CLOCKS_PER_SEC << "s"
+  << "\nOMP Wall Time(Seconds): "<< hdFourPro_omp_wtime_END - hdFourPro_omp_wtime_START <<"s"
+  << "\nOMP Timer Precision(Seconds): "<< hdFourPro_omp_ticks_END - hdFourPro_omp_ticks_START
+  << "\n********************************\nFINAL GRID: \n***********************************"
+  << std::endl;
+
+  //Print Final Table Results to .txt File.
+  print(vec, txtFile);
+  txtFile.close();
 }
 
 //------------------------------------------
@@ -264,7 +330,6 @@ void writePPM(const unsigned int &row,
               std::vector<std::vector<int> > &b ,
               std::string &fname)
 {
-    //TODO: Make a file that does appends and does not overwrite, and iterate over the file number
 
     ofstream img(fname.c_str(), std::ofstream::out);
     img << "P3" << endl;
