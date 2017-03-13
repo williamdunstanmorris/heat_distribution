@@ -1,6 +1,6 @@
 #$ -cwd
 #$ -V
-#$ -l hvmem=8GB
-#$ -l h_rt=00:01:00
+#$ -l h_vmem=4G
+#$ -l h_rt=00:10:00
 #$ -pe smp 4
-#$ a.out
+#$ ./a.out
