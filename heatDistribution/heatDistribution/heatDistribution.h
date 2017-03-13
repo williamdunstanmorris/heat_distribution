@@ -31,8 +31,7 @@ void hDFourPro(const unsigned int &row,
               std::string &fname);
 
 double deviation(std::vector<std::vector<double> > &vec,
-                std::vector<std::vector<double> > &vec1,
-                std::ofstream &file);
+                std::vector<std::vector<double> > &vec1);
 
 void writePPM(const unsigned int &row,
               const unsigned int &col,

@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "heatDistribution.h"
 //#include <usleep>
+
+//Number of threads:
 #define NUM_THREADS 4
 
 using namespace std;
@@ -115,9 +117,9 @@ void generate(unsigned const int &rows,
     {
       for (int c = 0; c < vec[0].size(); c++)
       {
-        cout << "[" << setw(8) << vec[r][c] << "]";
+        // cout << "[" << setw(8) << vec[r][c] << "]";
       }
-      cout<<endl;
+      // cout<<endl;
     }
 
   }
@@ -192,16 +194,16 @@ void generate(unsigned const int &rows,
       double hdOnePro_omp_wtime_END = omp_get_wtime();
       double hdOnePro_omp_ticks_END = omp_get_wtick();
 
-      cout << "\n*************************\nhdOnePro(): One Processor:"
-      <<"\nGrid_SPEC: (WxH) " << col << "x" << row
-      <<"\nTolerance Level: " << tolerence
-      <<"\nFinal accumulative difference between grids: "<<diff
-      << "\nIteration Count: " << ic
-      << "\nCPU Time(Ticks): " << hdOnePro_TICKS_AND_SECONDS_END - hdOnePro_TICKS_AND_SECONDS_START
-      << "\nCPU Time(Seconds): " << ((float) hdOnePro_TICKS_AND_SECONDS_END - hdOnePro_TICKS_AND_SECONDS_START) / CLOCKS_PER_SEC << "s"
-      << "\nOMP Wall Time(Seconds): "<< hdOnePro_omp_wtime_END - hdOnePro_omp_wtime_START <<"s"
-      << "\nOMP Timer Precision(Seconds): "<< hdOnePro_omp_ticks_END - hdOnePro_omp_ticks_START
-      << std::endl;
+      // cout << "\n*************************\nhdOnePro(): One Processor:"
+      // <<"\nGrid_SPEC: (WxH) " << col << "x" << row
+      // <<"\nTolerance Level: " << tolerence
+      // <<"\nFinal accumulative difference between grids: "<<diff
+      // << "\nIteration Count: " << ic
+      // << "\nCPU Time(Ticks): " << hdOnePro_TICKS_AND_SECONDS_END - hdOnePro_TICKS_AND_SECONDS_START
+      // << "\nCPU Time(Seconds): " << ((float) hdOnePro_TICKS_AND_SECONDS_END - hdOnePro_TICKS_AND_SECONDS_START) / CLOCKS_PER_SEC << "s"
+      // << "\nOMP Wall Time(Seconds): "<< hdOnePro_omp_wtime_END - hdOnePro_omp_wtime_START <<"s"
+      // << "\nOMP Timer Precision(Seconds): "<< hdOnePro_omp_ticks_END - hdOnePro_omp_ticks_START
+      // << std::endl;
 
       txtFile << "\n*************************\nhdOnePro(): One Processor:"
       <<"\nGrid_SPEC: (WxH) " << col << "x" << row
@@ -216,7 +218,7 @@ void generate(unsigned const int &rows,
       << std::endl;
 
       //Print Final Table Results to .txt File.
-      print(vec, txtFile);
+      // print(vec, txtFile);
       txtFile.close();
     }
 
@@ -289,7 +291,7 @@ void generate(unsigned const int &rows,
             }
           }
 
-          cout<<"Current Total = "<<currentTotal<<endl;
+          // cout<<"Current Total = "<<currentTotal<<endl;
 
           #pragma omp critical
           diff = (previousTotal - currentTotal);
@@ -297,17 +299,18 @@ void generate(unsigned const int &rows,
           if (diff<0.0)
           {
             diff=diff*-1;
-            cout<<"DIfference Inverted"<<endl;
+            // cout<<"DIfference Inverted"<<endl;
           }
           if (diff>tolerence)
           {
             previousTotal = currentTotal;
           }
 
-          cout<<"Previous Total = "<<previousTotal<<endl;
-          cout<<"Difference = "<<diff<<endl;
+          // cout<<"Previous Total = "<<previousTotal<<endl;
+          // cout<<"Difference = "<<diff<<endl;
 
           ic++;
+          cout<<"Difference between grids: "<<diff<<endl;
 
           // }//Finish Parallel BLOCK
         }
@@ -317,16 +320,16 @@ void generate(unsigned const int &rows,
         double hdFourPro_omp_wtime_END = omp_get_wtime();
         double hdFourPro_omp_ticks_END = omp_get_wtick();
 
-        cout << "\n*************************\nhdFourPro(): Four Processors:"
-        <<"\nGrid_SPEC: (WxH) " << col << "x" << row
-        <<"\nTolerance Level: " << tolerence
-        <<"\nFinal accumulative difference between grids: "<<diff
-        << "\nIteration Count: " << ic
-        << "\nCPU Time(Ticks): " << hdFourPro_TICKS_AND_SECONDS_END - hdFourPro_TICKS_AND_SECONDS_START
-        << "\nCPU Time(Seconds): " << ((float) hdFourPro_TICKS_AND_SECONDS_END - hdFourPro_TICKS_AND_SECONDS_START) / CLOCKS_PER_SEC << "s"
-        << "\nOMP Wall Time(Seconds): "<< hdFourPro_omp_wtime_END - hdFourPro_omp_wtime_START <<"s"
-        << "\nOMP Timer Precision(Seconds): "<< hdFourPro_omp_ticks_END - hdFourPro_omp_ticks_START
-        << std::endl;
+        // cout << "\n*************************\nhdFourPro(): Four Processors:"
+        // <<"\nGrid_SPEC: (WxH) " << col << "x" << row
+        // <<"\nTolerance Level: " << tolerence
+        // <<"\nFinal accumulative difference between grids: "<<diff
+        // << "\nIteration Count: " << ic
+        // << "\nCPU Time(Ticks): " << hdFourPro_TICKS_AND_SECONDS_END - hdFourPro_TICKS_AND_SECONDS_START
+        // << "\nCPU Time(Seconds): " << ((float) hdFourPro_TICKS_AND_SECONDS_END - hdFourPro_TICKS_AND_SECONDS_START) / CLOCKS_PER_SEC << "s"
+        // << "\nOMP Wall Time(Seconds): "<< hdFourPro_omp_wtime_END - hdFourPro_omp_wtime_START <<"s"
+        // << "\nOMP Timer Precision(Seconds): "<< hdFourPro_omp_ticks_END - hdFourPro_omp_ticks_START
+        // << std::endl;
 
         txtFile << "\n*************************\nhdFourPro(): Four Processors:"
         <<"\nGrid_SPEC: (WxH) " << col << "x" << row
@@ -352,8 +355,7 @@ void generate(unsigned const int &rows,
       */
 
       double deviation(std::vector<std::vector<double> > &vec,
-        std::vector<std::vector<double> > &vec1,
-        std::ofstream &file)
+        std::vector<std::vector<double> > &vec1)
         {
           double difference;
           double addedDifferences=0;
@@ -484,9 +486,10 @@ void generate(unsigned const int &rows,
               * pass by value will make a copy of the argument into the function parameter. In many cases,
               * this is a needless performance hit, as the original argument would have sufficed.
               */
-              const unsigned int row = 100;
-              const unsigned int column = 100;
-              const double tolerence = 0.1;
+              const unsigned int row = 500;
+              const unsigned int column = 500;
+              const double tolerence = 0.01;
+
               std::vector<std::vector<double> > v;
               std::vector<std::vector<double> > v1;
 
@@ -494,10 +497,10 @@ void generate(unsigned const int &rows,
               std::vector<std::vector<int> > g;
               std::vector<std::vector<int> > b;
 
-              std::string ONE_fileString = "ONE_100x100.01.txt";
-              std::string ONE_ppmstring = "ONE_100x100.01.ppm";
-              std::string FOUR_fileString = "FOUR_100x100.01.txt";
-              std::string FOUR_ppmstring = "FOUR_100x100.01.ppm";
+              std::string ONE_fileString = "ONE_500x500_0.01.txt";
+              std::string ONE_ppmstring = "ONE_500x500_0.01.ppm";
+              std::string FOUR_fileString = "FOUR_500x500_0.01.txt";
+              std::string FOUR_ppmstring = "FOUR_500x500_0.01.ppm";
 
               bool parallel = true;
               bool single = false;
@@ -513,5 +516,9 @@ void generate(unsigned const int &rows,
               hDFourPro(row, column, v1, tolerence, FOUR_fileString);
               calculateRGB(v1, r,g,b );
               writePPM(row, column,v1,r,g,b, FOUR_ppmstring);
+
+              ofstream txtFile("Standard Deviation",std::ofstream::out);
+              txtFile<<"\nStandard Deviation Between Grids: "<<deviation(v,v1)<<endl;
+              txtFile.close();
 
             }
