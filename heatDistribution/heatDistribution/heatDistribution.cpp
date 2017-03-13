@@ -494,7 +494,7 @@ void generate(unsigned const int &rows,
               std::vector<std::vector<int> > r;
               std::vector<std::vector<int> > g;
               std::vector<std::vector<int> > b;
-
+              
               std::string ONE_fileString = "ONE_400x1000_0.01.txt";
               std::string ONE_ppmstring = "ONE_400x1000_0.01.ppm";
               std::string FOUR_fileString = "FOUR_400x1000_0.01.txt";
@@ -505,7 +505,7 @@ void generate(unsigned const int &rows,
 
               generate(row, column, v,r,g,b);
               fill(v, single);
-              hDFourPro(row, column, v, tolerence, ONE_fileString);
+              hDOnePro(row, column, v, tolerence, ONE_fileString);
               calculateRGB(v, r,g,b );
               writePPM(row, column,v,r,g,b, ONE_ppmstring);
 
