@@ -484,8 +484,8 @@ void generate(unsigned const int &rows,
               * pass by value will make a copy of the argument into the function parameter. In many cases,
               * this is a needless performance hit, as the original argument would have sufficed.
               */
-              const unsigned int row = 500;
-              const unsigned int column = 500;
+              const unsigned int row = 400;
+              const unsigned int column = 1000;
               const double tolerence = 0.01;
 
               std::vector<std::vector<double> > v;
@@ -495,10 +495,10 @@ void generate(unsigned const int &rows,
               std::vector<std::vector<int> > g;
               std::vector<std::vector<int> > b;
 
-              std::string ONE_fileString = "ONE_500x500_0.01.txt";
-              std::string ONE_ppmstring = "ONE_500x500_0.01.ppm";
-              std::string FOUR_fileString = "FOUR_500x500_0.01.txt";
-              std::string FOUR_ppmstring = "FOUR_500x500_0.01.ppm";
+              std::string ONE_fileString = "ONE_400x1000_0.01.txt";
+              std::string ONE_ppmstring = "ONE_400x1000_0.01.ppm";
+              std::string FOUR_fileString = "FOUR_400x1000_0.01.txt";
+              std::string FOUR_ppmstring = "FOUR_400x1000_0.01.ppm";
 
               bool parallel = true;
               bool single = false;
