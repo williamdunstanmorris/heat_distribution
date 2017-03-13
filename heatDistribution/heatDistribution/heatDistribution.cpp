@@ -308,7 +308,7 @@ void generate(unsigned const int &rows,
           // cout<<"Difference = "<<diff<<endl;
 
           ic++;
-          // cout<<"Difference between grids: "<<diff<<endl;
+          cout<<"Difference between grids: "<<diff<<endl;
 
           // }//Finish Parallel BLOCK
         }
@@ -484,8 +484,8 @@ void generate(unsigned const int &rows,
               * pass by value will make a copy of the argument into the function parameter. In many cases,
               * this is a needless performance hit, as the original argument would have sufficed.
               */
-              const unsigned int row = 400;
-              const unsigned int column = 1000;
+              const unsigned int row = 100;
+              const unsigned int column = 100;
               const double tolerence = 0.01;
 
               std::vector<std::vector<double> > v;
@@ -494,7 +494,7 @@ void generate(unsigned const int &rows,
               std::vector<std::vector<int> > r;
               std::vector<std::vector<int> > g;
               std::vector<std::vector<int> > b;
-              
+
               std::string ONE_fileString = "ONE_400x1000_0.01.txt";
               std::string ONE_ppmstring = "ONE_400x1000_0.01.ppm";
               std::string FOUR_fileString = "FOUR_400x1000_0.01.txt";
@@ -502,12 +502,12 @@ void generate(unsigned const int &rows,
 
               bool parallel = true;
               bool single = false;
-
-              generate(row, column, v,r,g,b);
-              fill(v, single);
-              hDOnePro(row, column, v, tolerence, ONE_fileString);
-              calculateRGB(v, r,g,b );
-              writePPM(row, column,v,r,g,b, ONE_ppmstring);
+              //
+              // generate(row, column, v,r,g,b);
+              // fill(v, single);
+              // hDOnePro(row, column, v, tolerence, ONE_fileString);
+              // calculateRGB(v, r,g,b );
+              // writePPM(row, column,v,r,g,b, ONE_ppmstring);
 
               generate(row, column, v1,r,g,b);
               fill(v1, parallel);

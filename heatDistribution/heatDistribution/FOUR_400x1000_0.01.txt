@@ -1,13 +1,13 @@
 
 *************************
 hdFourPro(): Four Processors:
-Grid_SPEC: (WxH) 1000x400
+Grid_SPEC: (WxH) 100x100
 Tolerance Level: 0.01
-Final accumulative difference between grids: 0.00999985
-Iteration Count: 245309
-CPU Time(Ticks): 4.8605e+08
-CPU Time(Seconds): 486.05s
-OMP Wall Time(Seconds): 122.051s
+Final accumulative difference between grids: 0.00998788
+Iteration Count: 6511
+CPU Time(Ticks): 6.25952e+06
+CPU Time(Seconds): 6.25952s
+OMP Wall Time(Seconds): 3.35921s
 OMP Timer Precision(Seconds): 0
 ********************************
 FINAL GRID: 
