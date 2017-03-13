@@ -484,9 +484,9 @@ void generate(unsigned const int &rows,
               * pass by value will make a copy of the argument into the function parameter. In many cases,
               * this is a needless performance hit, as the original argument would have sufficed.
               */
-              const unsigned int row = 100;
-              const unsigned int column = 100;
-              const double tolerence = 0.01;
+              const unsigned int row = 1000;
+              const unsigned int column = 1000;
+              const double tolerence = 0.0001;
 
               std::vector<std::vector<double> > v;
               std::vector<std::vector<double> > v1;
@@ -495,19 +495,19 @@ void generate(unsigned const int &rows,
               std::vector<std::vector<int> > g;
               std::vector<std::vector<int> > b;
 
-              std::string ONE_fileString = "ONE_400x1000_0.01.txt";
-              std::string ONE_ppmstring = "ONE_400x1000_0.01.ppm";
-              std::string FOUR_fileString = "FOUR_400x1000_0.01.txt";
-              std::string FOUR_ppmstring = "FOUR_400x1000_0.01.ppm";
+              std::string ONE_fileString = "ONE_500x500_0.0001.txt";
+              std::string ONE_ppmstring = "ONE_500x500_0.0001.ppm";
+              std::string FOUR_fileString = "FOUR_1000x1000_0.0001.txt";
+              std::string FOUR_ppmstring = "FOUR_400x1000_0.0001.ppm";
 
               bool parallel = true;
               bool single = false;
-              //
-              // generate(row, column, v,r,g,b);
-              // fill(v, single);
-              // hDOnePro(row, column, v, tolerence, ONE_fileString);
-              // calculateRGB(v, r,g,b );
-              // writePPM(row, column,v,r,g,b, ONE_ppmstring);
+
+              generate(row, column, v,r,g,b);
+              fill(v, single);
+              hDOnePro(row, column, v, tolerence, ONE_fileString);
+              calculateRGB(v, r,g,b );
+              writePPM(row, column,v,r,g,b, ONE_ppmstring);
 
               generate(row, column, v1,r,g,b);
               fill(v1, parallel);
