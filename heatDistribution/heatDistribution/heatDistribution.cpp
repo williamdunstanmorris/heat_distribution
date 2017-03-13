@@ -184,7 +184,7 @@ void generate(unsigned const int &rows,
         }
 
         //This difference should decrease per iteration:
-        cout<<"Difference between grids: "<<diff<<endl;
+        // cout<<"Difference between grids: "<<diff<<endl;
       }
       while (diff>tolerence);
       //---------------------------------------------------
@@ -310,7 +310,7 @@ void generate(unsigned const int &rows,
           // cout<<"Difference = "<<diff<<endl;
 
           ic++;
-          cout<<"Difference between grids: "<<diff<<endl;
+          // cout<<"Difference between grids: "<<diff<<endl;
 
           // }//Finish Parallel BLOCK
         }

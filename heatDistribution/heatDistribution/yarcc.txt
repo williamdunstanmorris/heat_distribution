@@ -1,4 +1,5 @@
 #$ -cwd
+#$ -V
 #$ -l h_rt=00:01:00
 #$ -l hvmem=8GB
 #$ -l h_stack=memory
