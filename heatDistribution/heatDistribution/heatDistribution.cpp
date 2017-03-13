@@ -222,8 +222,6 @@ void generate(unsigned const int &rows,
       txtFile.close();
     }
 
-
-
     void hDFourPro(const unsigned int &row,
       const unsigned int &col,
       std::vector<std::vector<double> > &vec,
